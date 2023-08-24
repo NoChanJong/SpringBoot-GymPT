@@ -1,0 +1,113 @@
+@charset "UTF-8";
+a {
+	color: black;
+	text-decoration: none;
+}
+
+ 
+ .navbar-nav li {
+  font-family: Arial, sans-serif; /* 글꼴 설정 */
+}
+
+.navbar-nav li a {
+	color:white;
+  padding: 5px 10px; /* 필요에 따라 패딩 조정 */
+  border-radius: 5px; /* 필요에 따라 테두리 둥글게 조정 */
+}
+ 
+.navbar-toggler {
+   border: none;
+   outline: none;
+}
+ 
+ .unav {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+}
+
+.unav li {
+  margin-bottom: 10px;
+}
+ 
+.upbtn {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: 10vw; /* viewport의 너비에 따라 10% 크기로 조정 */
+  height: 10vw; /* viewport의 너비에 따라 10% 크기로 조정 */
+  background: #34495E; /* Slightly different color */
+  overflow: auto;
+  position: fixed;
+  right: 3vw; /* viewport의 너비에 따라 3% 위치로 조정 */
+  bottom: 15vh; /* viewport의 높이에 따라 8% 위치로 조정 */
+  border: none;
+  border-radius: 50%;
+  font-size: 5vw; /* viewport의 너비에 따라 5% 크기로 조정 */
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a box shadow */
+}
+
+.upbtn:hover {
+  background-color: #2C3E50; /* Slightly different hover color */
+}
+.fa-plus-circle {
+  color: green;
+}
+
+td {
+	border: none;
+}
+
+		.modal-content,
+		.modal-header,
+		.modal-body,
+		.modal-footer,
+		.input-group-text,
+		.form-control,
+		.form-select,
+		.input-group-text,
+		.input-group,
+		.textarea,
+		.input-group-text,
+		.input-group,
+		.input-group-text,
+		.form-control,
+		.form-control,
+		.form-control,
+		.form-control {
+			border: none;
+		}
+i {
+	color: darkgrey;
+}
+
+hr{
+	color: lightgray;
+}
+
+
+.file-icon {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  background-color:white;
+  transform: translateX(90%);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.file-icon i {
+  font-size: 30px;
+}
+
+.file-input {
+  position: relative;
+  z-index: 2;
+}
+
+

@@ -1,0 +1,20 @@
+@charset "UTF-8";
+
+.btn-success {
+	background-color: #343a40;
+	color: #fff;
+	border: none;
+}
+
+.btn-success:hover {
+	background-color: gray;
+}
+.btn-primary {
+	background-color: #343a40;
+	color: #fff;
+	border: none;
+}
+
+.btn-primary:hover {
+	background-color: gray;
+}

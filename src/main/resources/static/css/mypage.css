@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+  #memberinfo{
+  	display: flex;
+  	justify-content: center;
+  }
+    .container {
+    border-radius: 5px;
+    padding: 20px;
+    margin: 0 auto;
+    color: white;
+  }
+
+  @media (min-width: 745px) {
+    .getMember img {
+      width:300px;
+      height:300px;
+      border-radius: 50%;
+    }
+  }
+  @media (max-width: 1000px) {
+  .getMember img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+  	}
+  }
+ 

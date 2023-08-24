@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>GYM-PT</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script
+   src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<link rel="stylesheet"
+   href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+   integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+   crossorigin="anonymous">
+<link
+   href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+   rel="stylesheet"
+   integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+   crossorigin="anonymous">
+<script
+   src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+   integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+   crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css"
+   href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css" />
+<link rel="stylesheet"
+   href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script
+   src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<link rel="stylesheet"
+   href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+   integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+   crossorigin="anonymous">
+
+<link rel="stylesheet" type="text/css"
+   href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css" />
+<link rel="stylesheet"
+   href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link th:href="@{/css/btnprimary.css}" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="/css/navbar.css">
+<link rel="stylesheet" type="text/css" href="/css/footer.css">
+<link th:href="@{/css/navbar.css}" rel="stylesheet">
+<!-- navbar 스타일 -->
+<link th:href="@{/css/footer.css}" rel="stylesheet">
+<!-- footer 스타일 -->
+<link th:href="@{/css/atag.css}" rel="stylesheet">
+<!-- a태그관련 스타일 -->
+<link th:href="@{/css/btnprimary.css}" rel="stylesheet">
+<!-- btn 스타일 -->
+</head>
+<style>
+.input-group-prepend span {
+   position: absolute;
+   left: 12px;
+   top: 12px;
+   font-size: 15px;
+   transition: all 0.2s;
+   pointer-events: none;
+   color: gray;
+}
+
+.hidden {
+   display: none;
+}
+
+.form-control:focus+.input-group-prepend span, .form-control:not(:placeholder-shown)+.input-group-prepend span
+   {
+   font-size: 10px;
+   top: 4px;
+   color: #007bff;
+}
+
+.form-control.content {
+   padding: 15px;
+   border-radius: 10px; /* 둥근 테두리를 적용할 값 */
+}
+
+.custom-input-group {
+   height: 50px;
+   display: flex;
+   border: 1px solid #ced4da;
+   border-radius: 10px; /* 둥근 테두리를 적용할 값 */
+   overflow: hidden;
+}
+
+.custom-input-group .form-control {
+   border: none;
+}
+
+body {
+   background-color: #212529;
+   color: #fff;
+   font-size: 15px;
+   margin: 0;
+   padding: 0;
+}
+
+.header {
+   background-color: #141414;
+   color: #ffffff;
+   padding: 20px;
+   text-align: center;
+}
+
+.header h1 {
+   margin: 0;
+   position: relative;
+}
+
+.product-details-container {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-bottom: 20px;
+   margin-top: 20px;
+}
+
+.product-image {
+   flex: 0 0 40%;
+   max-width: 50%;
+   margin-right: 10px;
+}
+
+.product-description {
+   flex: 0 0 40%;
+   max-width: 50%;
+}
+
+.product-name {
+   font-size: 35px;
+   font-weight: bold;
+   margin-bottom: 10px;
+   text-align: right;
+}
+
+.average-sRating {
+   font-size: 18px;
+   text-align: right;
+}
+
+.product-price {
+   font-size: 18px;
+   margin-bottom: 10px;
+   text-align: right;
+}
+
+.input-group.hidden {
+   display: none;
+}
+
+.add-to-cart-container {
+   margin-top: 20px;
+   text-align: right;
+}
+
+/* 상품후기 글씨 */
+.form-container h3 {
+   text-align: center;
+}
+
+/* 버튼 스타일 */
+.button-container {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: space-between;
+   border: none !important; /* 테두리 제거 */
+}
+
+/* 추가된 스타일 */
+.full-width-button {
+   width: 100%;
+   padding: 15px 20px; /* 장바구니 버튼의 높이와 가로 여백을 조정 */
+   margin-top: 5px;
+}
+
+/* 추가된 스타일 */
+.button-group {
+   display: flex;
+   flex-basis: 100%;
+   justify-content: space-between;
+   margin-bottom: 5px;
+}
+
+/* 추가된 스타일 */
+.button-group .btn {
+   flex-basis: calc(50% - 5px); /* 한 줄에 2개의 버튼이 들어가도록 설정, 여유 공간은 5px */
+}
+
+/* 추가된 스타일 */
+.btn-danger {
+   background-color: #FF8C00;
+   color: #fff; /* 흰색 텍스트 색상 */
+   border: none !important; /* 테두리 제거 */
+   transition: background-color 0.3s; /* 호버 효과에 애니메이션 추가 */
+}
+
+/* 추가된 스타일 */
+.btn-primary {
+   background-color: #9370DB;
+   color: #fff; /* 흰색 텍스트 색상 */
+   border: none !important; /* 테두리 제거 */
+   transition: background-color 0.3s; /* 호버 효과에 애니메이션 추가 */
+}
+
+/* 추가된 스타일 */
+.btn-danger:hover {
+   background-color: #ff4500; /* 빨간색 계열로 호버 효과 색상 변경 */
+}
+
+/* 추가된 스타일 */
+.btn-primary:hover {
+   background-color: #9932CC; /* 진한 파란색 계열로 호버 효과 색상 변경 */
+}
+
+/* 상품후기 */
+.rating {
+   display: flex;
+   align-items: center;
+}
+
+.rating input[type="radio"] {
+   display: none;
+}
+
+.rating label {
+   font-size: 2em;
+   color: #ccc;
+   cursor: pointer;
+}
+
+.rating label .material-icons {
+   vertical-align: middle;
+}
+
+.rating input[type="radio"]:checked ~ label {
+   color: #fada00;
+}
+
+.form-group textarea {
+   width: 100%;
+   resize: vertical;
+}
+
+.form-group button {
+   margin-top: 20px;
+}
+
+.review-item {
+   display: flex;
+   align-items: flex-start;
+   margin-bottom: 20px;
+}
+
+.review-item .review-content {
+   margin-left: 10px;
+}
+
+.review-item .review-content p {
+   margin: 0;
+}
+
+.review-item .review-content .review-info {
+   display: flex;
+   align-items: center;
+   margin-bottom: 5px;
+}
+
+.review-item .review-content .review-info span {
+   margin-right: 10px;
+   font-size: 14px;
+}
+
+.review-item .review-content .review-actions {
+   margin-left: auto;
+}
+
+/* Add this custom CSS to hide the input box's border */
+.form-control.hidden-input {
+   border: none;
+   background-color: transparent;
+   padding: 0;
+}
+
+/* 입력 상자의 텍스트 스타일링을 위한 커스텀 CSS 추가 */
+.hidden-input {
+   color: white;
+   font-weight: bold;
+}
+/* 입력 상자의 외곽선 제거 */
+.hidden-input.form-control {
+   border: none;
+   box-shadow: none;
+}
+
+.hidden {
+   display: none;
+}
+
+.myform h4 {
+   margin-right: 10px; /* 원하는 간격으로 조정해주세요 */
+}
+
+.myform fieldset {
+   display: inline-block;
+   direction: rtl;
+   border: 0;
+}
+
+.myform fieldset legend {
+   text-align: right;
+}
+
+.myform input[type=radio] {
+   display: none;
+}
+
+.myform label {
+   font-size: 3em;
+   color: transparent;
+   text-shadow: 0 0 0 #f0f0f0;
+   margin-right: 5px; /* 원하는 간격으로 조정해주세요 */
+}
+
+.myform label:hover {
+   text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+
+.myform label:hover ~ label {
+   text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+
+.myform input[type=radio]:checked ~ label {
+   text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+
+.starPoint {
+   font-size: 2em;
+   color: rgba(250, 208, 0, 0.99); /* 노란색으로 변경 (R: 250, G: 208, B: 0) */
+   text-shadow: 0 0 0 #f0f0f0;
+   margin-right: 5px; /* 원하는 간격으로 조정해주세요 */
+}
+
+.product-details-container {
+   display: flex;
+   align-items: flex-start;
+}
+
+.product-image {
+   flex: 0 0 50%;
+   max-width: 50%;
+}
+
+.product-description {
+   flex: 0 0 50%;
+   max-width: 50%;
+   padding-left: 20px;
+}
+
+.product-name {
+   font-size: 18px;
+   font-weight: bold;
+   margin-bottom: 10px;
+}
+
+.product-price {
+   margin-bottom: 10px;
+}
+
+.product-content {
+   margin-bottom: 20px;
+}
+
+.add-to-cart-container {
+   margin-top: 20px;
+}
+
+.custom-btn {
+   border: none;
+   background-color: transparent;
+   color: orange;
+   text-decoration: none;
+   cursor: pointer;
+}
+/* 모바일 화면에 적용되는 스타일 */
+@media ( max-width : 767px) {
+   .product-details-container {
+      /* 컨테이너를 세로로 정렬합니다. */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+   }
+   .product-image {
+      /* 이미지 캐러셀을 가운데 정렬하고 크기를 조정합니다. */
+      text-align: center;
+      margin-bottom: 20px;
+      max-width: 100%;
+   }
+   .product-name {
+      font-size: 1.0em; /* 원하는 크기로 조정하세요 */
+   }
+   .product-description {
+      /* 설명 부분을 가운데 정렬하고 크기를 조정합니다. */
+      text-align: center;
+      width: 90%; /* 예시로 너비를 90%로 지정 */
+      max-width: 800px;
+      padding-left: 0px;
+   }
+   .product-price {
+      /* 상품 가격 영역을 가운데 정렬하고 크기를 조정합니다. */
+      text-align: center;
+      max-width: 800px;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+   }
+   .add-to-cart-container {
+      /* 장바구니 영역을 가운데 정렬하고 크기를 조정합니다. */
+      text-align: center;
+      max-width: 800px;
+   }
+   .addToCart {
+      /* 장바구니 담기 버튼 영역의 너비를 조정합니다. */
+      width: 100%;
+   }
+}
+
+.averageSRating {
+   font-size: 1.5em;
+   padding-top: 10px; /* 위쪽으로 10px의 여백을 추가 */
+}
+</style>
+<body style="background-color: #212529; overflow-x: hidden;">
+   <nav
+      class="navbar navbar-expand-lg navbar-light bg-light justify-content-start fixed-top">
+      <a th:href="@{/index}" class="btn logo-icon-button">
+         <img src="/logo/mainlogo2.png" alt="로고"
+         style="max-height: 15%; max-width: 15%;"> <span style="font-size: 24px;">GYM_PT</span>
+      </a>
+
+      <button id="searchToggle" class="btn btn-primary pt-2" type="button">
+         <i class="fas fa-search"></i>
+      </button>
+
+      <!-- 로그인한 사용자에게만 보여질 내용 -->
+      <div th:if="${#authentication.principal != 'anonymousUser'}">
+         <button id="myToggle" class="btn profile-icon-button" type="button">
+            <img th:src="@{/image/} + ${#authentication.principal.profile}"
+               alt="Profile Picture"
+               style="width: 30px; height: 30px; border-radius: 50%;">
+         </button>
+      </div>
+      <!-- 로그인하지 않은 사용자에게 보여질 내용 -->
+      <div th:unless="${#authentication.principal != 'anonymousUser'}">
+         <a href="#"></a>
+      </div>
+
+
+      <a th:href="@{/chat/room}" class="btn chat-icon-button" type="button">
+         <i class="material-icons">send</i>
+      </a>
+
+      <div id="searchFormWrapper"
+         class="d-none d-flex align-items-center mx-auto">
+         <form action="selectMember" method="get" class="ms-0"
+            id="selectMemberForm">
+            <!-- 컴퓨터용 -->
+            <input type="hidden" id="curPage" name="curPage" th:value="0">
+            <input type="hidden" id="rowSizePerPage" name="rowSizePerPage"
+               th:value="${rp}">
+            <div class="row justify-content-center">
+               <div class="col-auto">
+                  <div class="input-group">
+                     <select class="form-select" id="searchType" name="searchType"
+                        th:value="${st}" style="display: none;">
+                        <option value="">검색</option>
+                        <option value="both" th:selected="${st == 'both'}">아이디
+                           또는 닉네임</option>
+                     </select> <input class="form-control bg-dark text-light" name="searchWord"
+                        type="text" placeholder="🍳유저 검색" />
+                     <button class="btn btn-primary" type="submit">검색</button>
+                  </div>
+               </div>
+            </div>
+         </form>
+      </div>
+
+      <div th:if="${#authentication.principal != 'anonymousUser'}"
+         id="myFormWrapper"
+         class="d-none d-flex mx-auto flex-column align-items-center">
+         <img th:src="@{/image/} + ${#authentication.principal.profile}"
+            alt="Profile Picture"
+            style="width: 80px; height: 80px; border-radius: 50%;">
+         <p th:text="${#authentication.principal.nickname}" class="m-0"></p>
+         <p th:text="${#authentication.principal.username}"
+            style="color: gray;" class="m-0"></p>
+			<a
+				th:href="@{/getMember(id=${#authentication.principal.username})}"
+				style="color: white;" class="m-0"><i class="fas fa-user"></i>
+				마이 페이지</a> <a href="logout" onclick="return confirm('로그아웃 하시겠습니까?')"
+				style="color: white;" class="m-0"><i class="fas fa-sign-out-alt"></i>
+				로그아웃</a>
+         <!-- 로그인 안되어있을떄  -->
+      </div>
+   </nav>
+
+   <div class="sidebar">
+      <ul>
+         <!-- 로그인하지 않은 상태일 때 로그인 및 회원가입 링크를 보여줍니다 -->
+         <li th:if="${#authentication.principal == 'anonymousUser'}"
+            class="login-signup"><a th:href="@{/login}">로그인</a> <a
+            th:href="@{/insertMember}">회원가입</a></li>
+
+         <!-- 로그인한 상태일 때 사용자 닉네임을 보여줍니다 -->
+         <li th:unless="${#authentication.principal == 'anonymousUser'}"><span
+               th:text="${#authentication.principal.nickname}"></span>님 접속중
+         </li>
+
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/index}"><i class="fas fa-home"></i> 홈</a></li>
+         <li><a th:href="@{/getCommunityList}"><i
+               class="fas fa-users"></i> 커뮤니티</a></li>
+         <li><a href="#" onclick="toggleSubMenu()"
+            style="color: #289AFF;"><i class="fas fa-dumbbell"></i> 쇼핑몰</a>
+            <ul id="submenu" class="submenu">
+               <li><a th:href="@{/shopBoardList}"><i
+                     class="fas fa-shopping-cart"></i> 쇼핑하기</a></li>
+               <li><a th:href="@{/cartList}"><i
+                     class="fas fa-shopping-basket"></i> 장바구니</a></li>
+               <li><a th:href="@{/orderList}"><i class="fas fa-list-ul"></i>
+                     주문목록</a></li>
+               <li><a th:href="@{/insertPoint}"><i class="fas fa-coins"></i>
+                     포인트 충전</a></li>
+               <li><a th:href="@{/getBoardList}"><i
+                     class="fas fa-headset"></i> 고객센터</a></li>
+            </ul></li>
+         <li><a th:href="@{/getNewsList}"><i class="fas fa-newspaper"></i>
+               뉴스</a></li>
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/map}"><i class="fas fa-map-marker-alt"></i>
+               내 주변 헬스장 찾기</a></li>
+         <li><a th:href="@{/selectMember}"><i class="fas fa-user"></i>
+               유저 검색</a></li>
+         <li><a th:href="@{/getLikedCommunities}"><i
+               class="fas fa-heart"></i> 좋아요 한 게시물</a></li>
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/getInformlist}"><i
+               class="fas fa-volume-up"></i> 공지사항</a></li>
+         <li><a th:href="@{/getBoardList}"><i class="fas fa-headset"></i>
+               문의사항</a></li>
+
+         <li><hr></li>
+         <li
+            th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+            <a th:href="@{/adminpage}"> <i class="fas fa-user"></i> 관리자 페이지
+         </a>
+         </li>
+
+         <!-- New list item for horizontal rule -->
+      </ul>
+   </div>
+
+
+   <script>
+      function toggleSubMenu() {
+         var submenu = document.getElementById('submenu');
+         submenu.classList.toggle('active');
+      }
+   </script>
+
+   <div class="sidebar-toggle">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+   </div>
+
+
+
+   <script>
+      $(document).ready(function() {
+         $('.sidebar-toggle').on('click', function() {
+            $('.sidebar').toggleClass('active');
+            $(this).toggleClass('active');
+         });
+
+         $('.product-container').slick({
+            slidesToShow : 3,
+            slidesToScroll : 1,
+            prevArrow : $('.carousel-control.left'),
+            nextArrow : $('.carousel-control.right'),
+            responsive : [ {
+               breakpoint : 768,
+               settings : {
+                  slidesToShow : 1
+               }
+            } ]
+         });
+      });
+
+      $(document).ready(function() {
+         $("#searchToggle").on('click', function() {
+            $("#searchFormWrapper").toggleClass('d-none'); // 검색창을 보이거나 숨김
+         });
+      });
+
+      $(document).ready(function() {
+         $("#myToggle").on('click', function() {
+            $("#myFormWrapper").toggleClass('d-none'); // 검색창을 보이거나 숨김
+         });
+      });
+   </script>
+   <!-- nav -->
+
+   <div class="container  mt-5 pt-5" align="center">
+      <h1>GYM PT MALL 상품정보</h1>
+   </div>
+
+   <div class="container mt-3" align="center">
+      <form th:action="@{/updateShop}" method="post">
+         <input name="s_seq" type="hidden" th:value="${shop.sSeq}">
+
+
+         <div class="product-details-container">
+            <div class="product-image">
+    <div id="carouselExample" class="carousel slide">
+        <div class="carousel-inner">
+            <th:block th:each="upload : ${#strings.arraySplit(shop.sUpload, ',')}">
+                <div class="carousel-item" th:classappend="${uploadStat.first} ? 'active'">
+                    <img th:if="${upload != null}" th:src="@{'/upload/' + ${upload}}" alt="사진" style="width: 50%; height: 50%;">
+                    <div th:unless="${upload != null}">상품 사진 없음</div>
+                </div>
+            </th:block>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const carousel = document.getElementById('carouselExample');
+        const carouselInstance = new bootstrap.Carousel(carousel, {
+            interval: false // 처음에는 자동 슬라이딩을 비활성화
+        });
+
+        let clickedOnce = false;
+
+        carousel.addEventListener('click', function () {
+            if (!clickedOnce) {
+                carouselInstance.pause(); // 한 번 클릭한 후 자동 슬라이딩을 다시 정지
+                clickedOnce = true;
+            }
+        });
+    });
+</script>
+            <div class="product-description">
+               <!-- 상품이름 -->
+               <div class="input-group mb-3 product-name">
+                  <div th:text="${shop.sName}" style="font-size: 2em;"></div>
+                  <input type="text" name="s_name" class="form-control hidden"
+                     id="s_name" th:value="${shop.sName}" readonly>
+               </div>
+               <!-- 상품리뷰 별점 평균 -->
+               <div class="input-group mb-3 average-sRating">
+                  <!--    <span class= "starPoint" th:text="${'☆'.repeat(#numbers.formatInteger(averageSRating, 0, 'COMMA'))}"></span> -->
+                  <span class="starPoint"> <script th:inline="javascript">
+                           var averageRating = /*[[${averageSRating}]]*/;
+                           var fullStars = Math.floor(averageRating);
+                           var halfStar = averageRating - fullStars >= 0.5;
+                           var emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+               
+                           var stars = "★".repeat(fullStars) + (halfStar ? "★" : "") + "☆".repeat(emptyStars);
+                           document.write(stars);
+                       </script>
+                  </span>
+                  <div class="averageSRating" th:text="'('+${averageSRating}+')'"
+                     style='font-size: 1.5em'></div>
+
+               </div>
+      </form>
+
+
+      <div class="product-price">
+         <!-- 상품가격 -->
+         <div class="input-group mb-3">
+            <!-- <span class="input-group-text" id="desc_title"><i class="fas fa-address-book"></i> 상품가격</span> -->
+            <!-- <span class="form-control hidden" th:text="${shop.sPrice}"></span> -->
+            <span class="form-control hidden"
+               th:text="${#numbers.formatInteger(shop.sPrice, 3, 'COMMA') + '원'}"></span>
+            <div style="font-size: 1.5em;"
+               th:text="${#numbers.formatInteger(shop.sPrice, 3, 'COMMA') + '원'}"></div>
+         </div>
+      </div>
+      <!-- 현재고 -->
+      <div class="input-group mb-3"
+         th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+         <div class="input-group-text">
+            <span><i class="fas fa-tag"></i>현재고</span>
+         </div>
+         <input type="number" name="s_amount" class="form-control"
+            id="s_amount" value="1" th:value="${shop.sAmount}" readonly>
+         <div class="input-group-append"></div>
+      </div>
+      <!-- 총 가격 -->
+      <div class="input-group mb-3 hidden">
+         <span class="input-group-text"><i class="fas fa-calculator"></i></span>
+         <span class="form-control" th:text="${shop.sPrice * shop.sAmount}"
+            readonly></span>
+      </div>
+
+      <!-- 작성자 -->
+      <div class="input-group mb-3"
+         th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+         <span class="input-group-text" id="desc_title"><i
+            class="fas fa-user"></i> 작성자</span> <span class="form-control"
+            th:text="${shop.memberId}" disabled></span>
+      </div>
+      <hr>
+      <div class="add-to-cart-container">
+
+         <div class="addToCart">
+            <form th:action="@{/addCart}" method="post">
+               <input name="s_seq" type="hidden" class="form-control"  th:value="${shop.sSeq}">
+               <div class="input-group mb-3 hidden">
+                  <div class="input-group-text">
+                     <i class="fas fa-pen"></i>
+                  </div>
+                  <input type="text" name="s_name" class="form-control" id="s_name"
+                     th:value="${shop.sName}" readonly>
+               </div>
+               <div class="input-group mb-3 hidden">
+                  <div class="input-group-text">
+                     <i class="fas fa-pen"></i>
+                  </div>
+                  <input type="text" name="s_price" class="form-control"
+                     id="s_price" th:value="${shop.sPrice}" readonly>
+               </div>
+               <div class="input-group mb-3 hidden">
+                  <span class="input-group-text"><i class="fas fa-file"></i></span>
+                  <input type="text" class="form-control"
+                     th:value="${shop.sUploadThumb}" name="s_upload_thumb"
+                     id="s_upload_thumb" readonly>
+               </div>
+
+
+
+               <!-- 상품옵션 -->
+               <div class="input-group mb-3 " style="font-size: 1.5em;">
+                  <span>상품옵션</span>
+               </div>
+               <div class="input-group mb-3">
+                  <input type="number" name="s_amount" class="form-control"
+                     id="s_amount" th:value="${shop.sAmount &lt;= 0 ? 0 : 1}"
+                     th:attr="disabled=${shop.sAmount &lt;= 0}" required>
+                  <div class="input-group-append">
+                     <!-- <button type="button" class="btn btn-outline-secondary" id="decreaseAmount"><i class="fas fa-minus"></i></button>
+                    <button type="button" class="btn btn-outline-secondary" id="increaseAmount"><i class="fas fa-plus"></i></button> -->
+                  </div>
+               </div>
+               <script>
+                  $(document).ready(function() {
+                     $("#decreaseAmount").click(function() {
+                        var amountInput = $("#s_amount");
+                        var amount = parseInt(amountInput.val());
+                        if (amount > 1) {
+                           amountInput.val(amount - 1);
+                        }
+                     });
+
+                     $("#increaseAmount").click(function() {
+                        var amountInput = $("#s_amount");
+                        var amount = parseInt(amountInput.val());
+                        amountInput.val(amount + 1);
+                     });
+                  });
+               </script>
+
+               <div class="text-center">
+                  <div id="alertMessage" th:if="${param.message}"
+                     class="alert alert-danger mt-3" role="alert"
+                     style="font-size: 18px; color: white; background-color: #dc3545; border-color: #dc3545;">
+                     <span th:text="${param.message}"></span>
+                  </div>
+                  <div id="message" class="alert alert-success mt-3"
+                     style="display: none;"></div>
+               </div>
+
+
+               <button type="submit"
+                  class="btn btn-danger mt-3 me-2 addToCart  full-width-button"
+                  th:attr="disabled=${shop.sAmount &lt;= 0}"
+                  th:text="${shop.sAmount &gt; 0 ? '장바구니 담기' : '품절된 상품입니다'}">
+                  장바구니 담기</button>
+               <div class="button-group">
+                  <a th:href="@{/shopBoardList}"
+                     class="btn btn-primary mt-3  full-width-button">상품보러 가기</a> <a
+                     th:href="@{/cartList}"
+                     class="btn btn-primary mt-3  full-width-button">장바구니 가기</a>
+               </div>
+            </form>
+         </div>
+      </div>
+      <div class="container"
+         style="display: flex; justify-content: flex-end;">
+         <a
+            th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}"
+            th:href="@{/updateShop(sSeq=${shop.sSeq})}"
+            class="btn btn-primary mt-3 me-2">게시글수정</a> <a
+            th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}"
+            th:href="@{/deleteShop(sSeq=${shop.sSeq})}"
+            onclick="return confirmDeleteShop()"
+            class="btn btn-primary mt-3 me-2">게시글삭제</a>
+
+         <script>
+  function confirmDeleteShop() {
+    if (confirm("정말 게시글을 삭제하시겠습니까?")) {
+      return true; // 예를 선택한 경우 게시글 삭제 진행
+    } else {
+      return false; // 아니오를 선택한 경우 알림창 닫기
+    }
+  }
+</script>
+      </div>
+   </div>
+   </div>
+   <br />
+
+
+   <!-- 수정된 본문 -->
+   <ul>
+      <th:block th:each="shop : ${shop}">
+         <li style="list-style-type: none;">
+            <div class="s_upload_content"
+               th:if="${not #strings.isEmpty(shop.sUploadContent)}">
+               <div th:each="upload : ${shop.sUploadContent.split(',')}">
+                  <img th:src="@{'/upload/' + ${upload}}" alt="사진"
+                     style="width: 50%; height: 50%;">
+               </div>
+            </div>
+         </li>
+      </th:block>
+   </ul>
+   <div class="input-group mb-3">
+      <!--    <span class="input-group-text"><i class="fas fa-clipboard"></i> 본문</span> -->
+      <span class="form-control hidden" th:text="${shop.sContent}" rows="15"></span>
+      <div class="hidden" th:text="${shop.sContent}" align="center"></div>
+   </div>
+   </div>
+   <!--   <a th:href="@{pay}" class="btn btn-danger mt-3">바로구매</a> -->
+   <hr />
+   <!-- 리뷰폼 -->
+   <div class="container mt-3" align="center">
+      <div class="container mt-3" align="left">
+         <h2>상품후기</h2>
+      </div>
+      <ul>
+         <li th:each="shopReply : ${shopReply}" style="list-style-type: none;">
+            <div style="display: flex; align-items: flex-start;">
+               <div style="font-size: 17px;">
+                  <div class="input-group mt-3 col-lg-1 starPoint">
+                     <span style="display: block; text-align: left;"> <span
+                        th:text="${'★'.repeat(#numbers.formatInteger(shopReply.sRating, 0, 'COMMA'))}"></span>
+                     </span>
+                     <!-- 댓글 삭제 버튼 -->
+                     <div
+                        th:if="${#authentication.principal.username == shopReply.memberId || #authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+                        <a class="btn btn-primary mt-3"
+                           onclick="return confirmWithdrawal()"
+                           th:href="@{/deleteReply(sSeq=${shop.sSeq},sRno=${shopReply.sRno})}"
+                           style="margin-left: 10px;"> <i class="fas fa-trash-alt"></i>
+                        </a>
+                     </div>
+                  </div>
+                  <span style="display: block; text-align: left;"
+                     th:text="${shopReply.memberId} + ' / ' + ${#dates.format(shopReply.srDate, 'yyyy-MM-dd HH:mm')}"></span>
+                  <br /> <span style="display: block; text-align: left;"
+                     th:text="${shopReply.srContent}"></span>
+                  <div style="display: flex; flex-wrap: wrap;">
+                     <button
+                        th:unless="${shopReply.srUpload == null or shopReply.srUpload == ''}"
+                        type="button" onclick="toggleImages(this)"
+                        class="btn btn-link custom-btn">사진보기</button>
+                     <div th:if="${shopReply.srUpload != null}"
+                        style="display: inline-block;">
+                        <div
+                           th:each="review, idx : ${#strings.arraySplit(shopReply.srUpload, ',')}"
+                           style="margin-right: 5px;">
+                           <img th:src="@{'/review/' + ${review}}" alt="사진"
+                              style="width: 50%; height: 50%; margin-bottom: 5px; display: none;"><br />
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </li>
+
+
+
+         <script>
+              // 메시지를 일정 시간(예: 3초) 후에 숨기는 함수
+             function hideAlertMessage() {
+                 var alertMessage = document.getElementById("alertMessage");
+                 if (alertMessage) {
+                     alertMessage.style.display = "none";
+                 }
+             }
+             // 3초 후에 메시지를 숨기기
+                setTimeout(hideAlertMessage, 3000); // 3000ms = 3초
+          
+             var isImageVisibleList = []; // Array to store visibility state for each reply
+         
+             function confirmWithdrawal() {
+                 if (confirm("정말 삭제하시겠습니까?")) {
+                     return true; // 예를 선택한 경우 댓글삭제 진행
+                 } else {
+                     return false; // 아니오를 선택한 경우 알림창 닫기
+                 }
+             }
+         
+             function toggleImages(button) {
+                 var imageContainer = button.nextElementSibling;
+                 var images = imageContainer.querySelectorAll("img");
+                 var replyIndex = getIndex(button);
+         
+                 isImageVisibleList[replyIndex] = !isImageVisibleList[replyIndex];
+         
+                 for (var i = 0; i < images.length; i++) {
+                     images[i].style.display = isImageVisibleList[replyIndex] ? "inline" : "none";
+                 }
+         
+                 var toggleButtonText = button.textContent;
+                 button.textContent = isImageVisibleList[replyIndex] ? "숨기기" : "사진보기";
+             }
+         
+             function getIndex(element) {
+                 var parent = element.parentNode;
+                 var index = Array.prototype.indexOf.call(parent.children, element);
+                 return index;
+             }
+         </script>
+
+      </ul>
+
+
+
+      <form method="post" action="/writeReply" enctype="multipart/form-data">
+         <h3>후기작성</h3>
+
+         <p>
+            <input class="form-control" type="hidden" name="s_seq" th:value="${shop.sSeq}">
+         <div class="input-group mt-3 col-lg-1 myform">
+            <fieldset>
+               <h4>?상품은 만족하셨나요</h4>
+               <div class="rating">
+                  <input type="radio" id="star5" name="sRating" value="5" required>
+                  <label for="star5">★</label> <input type="radio" id="star4"
+                     name="sRating" value="4"> <label for="star4">★</label> <input
+                     type="radio" id="star3" name="sRating" value="3"> <label
+                     for="star3">★</label> <input type="radio" id="star2"
+                     name="sRating" value="2"> <label for="star2">★</label> <input
+                     type="radio" id="star1" name="sRating" value="1"> <label
+                     for="star1">★</label>
+               </div>
+               <span id="ratingError" style="color: red; display: none;">별점을
+                  선택해주세요.</span>
+            </fieldset>
+         </div>
+
+         </p>
+         <p>
+         <div class="input-group mb-4 custom-input-group">
+            <input class="form-control" type="text" id="memberId"
+               name="memberId" th:value="${#authentication.principal.username}"
+               readonly="readonly">
+            <div class="input-group-prepend">
+               <span id="replyContent">댓글 작성자</span>
+            </div>
+         </div>
+
+
+         <p>
+         <div class="input-group mb-3">
+            <input type="file" class="form-control" name="uploadFiles"
+               id="uploadFiles" aria-describedby="Upload" aria-label="Upload"
+               multiple>
+            <div id="replyPreview"></div>
+            <script>
+                // 컨텐츠 이미지 업로드 input의 change 이벤트 리스너를 등록합니다.
+                document.getElementById("uploadFiles").addEventListener("change", function(event) {
+                    // 컨텐츠 이미지 미리보기를 표시할 div 엘리먼트를 가져옵니다.
+                    var contentPreviewDiv = document.getElementById("replyPreview");
+                    
+                    // 이전에 미리보기한 이미지가 있다면 제거합니다.
+                    contentPreviewDiv.innerHTML = "";
+            
+                    // 선택한 이미지 파일들을 읽어와서 컨텐츠 이미지 미리보기를 생성합니다.
+                    var files = event.target.files;
+                    for (var i = 0; i < files.length; i++) {
+                        var file = files[i];
+                        var reader = new FileReader();
+            
+                        reader.onload = function(event) {
+                            // 컨텐츠 이미지 미리보기를 위한 img 엘리먼트를 생성합니다.
+                            var img = document.createElement("img");
+                            img.src = event.target.result;
+                            img.alt = "사진";
+                            img.style.width = "50%";
+                            img.style.height = "50%";
+            
+                            // 이미지를 미리보기할 div에 추가합니다.
+                            contentPreviewDiv.appendChild(img);
+                        }
+            
+                        reader.readAsDataURL(file); // 이미지 파일을 Data URL로 읽어옵니다.
+                    }
+                });
+               </script>
+         </div>
+         </p>
+         <p>
+         <div class="input-group mb-4 ">
+            <textarea class="form-control content" rows="5" cols="50"
+               name="srContent" required placeholder=" "></textarea>
+            <div class="input-group-prepend">
+               <span id="replyContent">리뷰를 입력해주세요</span>
+            </div>
+         </div>
+         </p>
+
+         <p>
+            <!--  <div th:if="${replyMessage}" class="alert alert-danger mt-3" role="alert">
+                <span th:text="${replyMessage}"></span>
+            </div>
+            <div id="message" class="alert alert-success mt-3" style="display: none;"></div> -->
+
+            <button class="btn btn-primary mt-3" type="submit">댓글 작성</button>
+         </p>
+
+      </form>
+
+
+   </div>
+
+   <!-- footer -->
+   <div class="footer" style="margin-top: auto;">
+      <div class="container" align="left">
+         <div class="row">
+            <div class="col-md-4 footer-section">
+               <a href="#" class="footer-logo">GYM_PT</a>
+               <p class="dimmed-text">Growth Your Momentum-PT</p>
+               <div class="social-icons">
+                  <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+                  <a href="#" class="twitter"><i class="fab fa-twitter"></i></a> <a
+                     href="#" class="instagram"><i class="fab fa-instagram"></i></a> <a
+                     href="#" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
+               </div>
+            </div>
+
+            <div class="col-md-4 footer-section">
+               <h4>About Us</h4>
+               <div class="dimmed-text">
+                  <div class="contact-info">대표이사: 김연수 | 사업자등록 번호: 809-81-01574</div>
+                  <div class="contact-info">영업 시간: 평일 9:00-18:00</div>
+                  <div class="contact-info">회사 신념: "Growth Your Momentum-PT"</div>
+                  <div class="contact-info">수상: "2023년 최고의 피트니스 웹사이트"로 선정</div>
+               </div>
+            </div>
+            <div class="col-md-4 footer-section">
+               <h4>Contact Us</h4>
+               <div class="dimmed-text">
+                  <div>주소: 서울시 송파구 가락동</div>
+                  <div>전화: 1588-3819 (평일 9:00-18:00)</div>
+                  <div>결제도용신고: 1588-3816</div>
+                  <div>이메일: help@gympt.com</div>
+                  <div>고객센터 이용안내: 고객님의 소중한 의견을 기다립니다.</div>
+               </div>
+            </div>
+         </div>
+         <hr>
+         <div class="row">
+            <div class="col-md-12">
+               <p class="text-center">&copy; 2023 GYM_PT. All Rights Reserved.</p>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- footer -->
+</body>
+</html>

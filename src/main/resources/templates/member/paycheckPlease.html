@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>GYM-PT</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<script
+   src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<link rel="stylesheet"
+   href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+   integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+   crossorigin="anonymous">
+<link
+   href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+   rel="stylesheet"
+   integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+   crossorigin="anonymous">
+<script
+   src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+   integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+   crossorigin="anonymous"></script>
+<link rel="stylesheet"
+   href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link th:href="@{/css/atag.css}" rel="stylesheet">
+<!-- a태그관련 스타일 -->
+<link th:href="@{/css/btnprimary.css}" rel="stylesheet">
+<!-- btn 스타일 -->
+<link th:href="@{/css/navbar.css}" rel="stylesheet">
+<!-- navbar 스타일 -->
+<link th:href="@{/css/footer.css}" rel="stylesheet">
+<!-- footer 스타일 -->
+</head>
+<style>
+.input-group-prepend span {
+   position: absolute;
+   left: 12px;
+   top: 12px;
+   font-size: 15px;
+   transition: all 0.2s;
+   pointer-events: none;
+   color: gray;
+}
+
+body {
+   background-color: #212529;
+   color: #fff;
+   font-size: 15px;
+}
+
+.form-control:focus+.input-group-prepend span, .form-control:not(:placeholder-shown)+.input-group-prepend span
+   {
+   font-size: 10px;
+   top: 4px;
+   color: #007bff;
+}
+
+.custom-input-group {
+   height: 50px;
+   display: flex;
+   border: 1px solid #ced4da;
+   border-radius: 10px; /* 둥근 테두리를 적용할 값 */
+   overflow: hidden;
+}
+
+.custom-input-group .form-control {
+   border: none;
+}
+</style>
+<body>
+   <nav
+      class="navbar navbar-expand-lg navbar-light bg-light justify-content-start fixed-top">
+     <a th:href="@{/index}" class="btn logo-icon-button">
+         <img src="/logo/mainlogo2.png" alt="로고"
+         style="max-height: 15%; max-width: 15%;"> <span style="font-size: 24px;">GYM_PT</span>
+      </a>
+
+      <button id="searchToggle" class="btn btn-primary pt-2" type="button">
+         <i class="fas fa-search"></i>
+      </button>
+
+
+      <!-- 로그인한 사용자에게만 보여질 내용 -->
+      <div th:if="${#authentication.principal != 'anonymousUser'}">
+         <button id="myToggle" class="btn profile-icon-button" type="button">
+            <img th:src="@{/image/} + ${#authentication.principal.profile}"
+               alt="Profile Picture"
+               style="width: 30px; height: 30px; border-radius: 50%;">
+         </button>
+      </div>
+      <!-- 로그인하지 않은 사용자에게 보여질 내용 -->
+      <div th:unless="${#authentication.principal != 'anonymousUser'}">
+         <a href="#"></a>
+      </div>
+
+
+      <a th:href="@{/chat/room}" class="btn chat-icon-button" type="button">
+         <i class="material-icons">send</i>
+      </a>
+
+      <div id="searchFormWrapper"
+         class="d-none d-flex align-items-center mx-auto">
+         <form action="selectMember" method="get" class="ms-0"
+            id="selectMemberForm">
+            <!-- 컴퓨터용 -->
+            <input type="hidden" id="curPage" name="curPage" th:value="0">
+            <input type="hidden" id="rowSizePerPage" name="rowSizePerPage"
+               th:value="${rp}">
+            <div class="row justify-content-center">
+               <div class="col-auto">
+                  <div class="input-group">
+                     <select class="form-select" id="searchType" name="searchType"
+                        th:value="${st}" style="display: none;">
+                        <option value="">검색</option>
+                        <option value="both" th:selected="${st == 'both'}">아이디
+                           또는 닉네임</option>
+                     </select> <input class="form-control bg-dark text-light" name="searchWord"
+                        type="text" placeholder="🍳유저 검색" />
+                     <button class="btn btn-primary" type="submit">검색</button>
+                  </div>
+               </div>
+            </div>
+         </form>
+      </div>
+
+      <div th:if="${#authentication.principal != 'anonymousUser'}"
+         id="myFormWrapper"
+         class="d-none d-flex mx-auto flex-column align-items-center">
+         <img th:src="@{/image/} + ${#authentication.principal.profile}"
+            alt="Profile Picture"
+            style="width: 80px; height: 80px; border-radius: 50%;">
+         <p th:text="${#authentication.principal.nickname}" class="m-0"></p>
+         <p th:text="${#authentication.principal.username}"
+            style="color: gray;" class="m-0"></p>
+			<a
+				th:href="@{/getMember(id=${#authentication.principal.username})}"
+				style="color: white;" class="m-0"><i class="fas fa-user"></i>
+				마이 페이지</a> <a href="logout" onclick="return confirm('로그아웃 하시겠습니까?')"
+				style="color: white;" class="m-0"><i class="fas fa-sign-out-alt"></i>
+				로그아웃</a>
+         <!-- 로그인 안되어있을떄  -->
+      </div>
+   </nav>
+
+   <div class="sidebar">
+      <ul>
+         <!-- 로그인하지 않은 상태일 때 로그인 및 회원가입 링크를 보여줍니다 -->
+         <li th:if="${#authentication.principal == 'anonymousUser'}"
+            class="login-signup"><a th:href="@{/login}">로그인</a> <a
+            th:href="@{/insertMember}">회원가입</a></li>
+
+         <!-- 로그인한 상태일 때 사용자 닉네임을 보여줍니다 -->
+         <li th:unless="${#authentication.principal == 'anonymousUser'}"><span
+               th:text="${#authentication.principal.nickname}"></span>님 접속중
+         </li>
+
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/index}"><i class="fas fa-home"></i> 홈</a></li>
+         <li><a th:href="@{/getCommunityList}"><i
+               class="fas fa-users"></i> 커뮤니티</a></li>
+         <li><a href="#" onclick="toggleSubMenu()" style="color: #289AFF;"><i
+               class="fas fa-dumbbell"></i> 쇼핑몰</a>
+            <ul id="submenu" class="submenu">
+               <li><a th:href="@{/shopBoardList}"><i
+                     class="fas fa-shopping-cart"></i> 쇼핑하기</a></li>
+               <li><a th:href="@{/cartList}"><i
+                     class="fas fa-shopping-basket"></i> 장바구니</a></li>
+               <li><a th:href="@{/orderList}"><i class="fas fa-list-ul"></i>
+                     주문목록</a></li>
+               <li><a th:href="@{#}" style="color: #289AFF;"><i
+                     class="fas fa-coins"></i> 포인트 충전</a></li>
+               <li><a th:href="@{/getBoardList}"><i
+                     class="fas fa-headset"></i> 고객센터</a></li>
+            </ul></li>
+         <li><a th:href="@{/getNewsList}"><i class="fas fa-newspaper"></i>
+               뉴스</a></li>
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/map}"><i class="fas fa-map-marker-alt"></i>
+               내 주변 헬스장 찾기</a></li>
+         <li><a th:href="@{/selectMember}"><i class="fas fa-user"></i>
+               유저 검색</a></li>
+         <li><a th:href="@{/getLikedCommunities}"><i
+               class="fas fa-heart"></i> 좋아요 한 게시물</a></li>
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/getInformlist}"><i
+               class="fas fa-volume-up"></i> 공지사항</a></li>
+         <li><a th:href="@{/getBoardList}"><i class="fas fa-headset"></i>
+               문의사항</a></li>
+
+         <li><hr></li>
+         <li
+            th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+            <a th:href="@{/adminpage}"> <i class="fas fa-user"></i> 관리자 페이지
+         </a>
+         </li>
+
+         <!-- New list item for horizontal rule -->
+      </ul>
+   </div>
+
+
+   <script>
+      function toggleSubMenu() {
+         var submenu = document.getElementById('submenu');
+         submenu.classList.toggle('active');
+      }
+   </script>
+
+   <div class="sidebar-toggle">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+   </div>
+
+
+
+   <script>
+      $(document).ready(function() {
+         $('.sidebar-toggle').on('click', function() {
+            $('.sidebar').toggleClass('active');
+            $(this).toggleClass('active');
+         });
+
+         $('.product-container').slick({
+            slidesToShow : 3,
+            slidesToScroll : 1,
+            prevArrow : $('.carousel-control.left'),
+            nextArrow : $('.carousel-control.right'),
+            responsive : [ {
+               breakpoint : 768,
+               settings : {
+                  slidesToShow : 1
+               }
+            } ]
+         });
+      });
+
+      $(document).ready(function() {
+         $("#searchToggle").on('click', function() {
+            $("#searchFormWrapper").toggleClass('d-none'); // 검색창을 보이거나 숨김
+         });
+      });
+
+      $(document).ready(function() {
+         $("#myToggle").on('click', function() {
+            $("#myFormWrapper").toggleClass('d-none'); // 검색창을 보이거나 숨김
+         });
+      });
+   </script>
+   <!-- nav -->
+   
+   
+   
+   
+   <div class="container col-lg-8 mt-5 pt-5" align="center">
+      <div class="mt-4 p-5"
+         style="background-color: #212529; color: #ffffff;">
+         <h1 style="position: center;">아래 계좌로 입금</h1>
+         <h3>은행 : (OO은행) 0000-000-000000</h3>
+         <h3>예금주 : 김연수</h3>
+         <br>
+         <div class="mt-1">
+            <div class="mt-1 text-center"> <!-- Here, change text-end to text-center -->
+            <a th:href="@{/index}" class="btn btn-primary btn-lg" style="padding:5px 50px">HOME</a>
+        </div>
+         </div>
+      </div>
+   </div>
+   
+   
+   
+   
+   
+   <!-- footer -->
+   <div class="footer" style="margin-top: auto;">
+      <div class="container" align="left">
+         <div class="row">
+            <div class="col-md-4 footer-section">
+               <a href="#" class="footer-logo">GYM_PT</a>
+               <p class="dimmed-text">Growth Your Momentum-PT</p>
+               <div class="social-icons">
+                  <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+                  <a href="#" class="twitter"><i class="fab fa-twitter"></i></a> <a
+                     href="#" class="instagram"><i class="fab fa-instagram"></i></a> <a
+                     href="#" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
+               </div>
+            </div>
+
+            <div class="col-md-4 footer-section">
+               <h4>About Us</h4>
+               <div class="dimmed-text">
+                  <div class="contact-info">대표이사: 김연수 | 사업자등록 번호: 809-81-01574</div>
+                  <div class="contact-info">영업 시간: 평일 9:00-18:00</div>
+                  <div class="contact-info">회사 신념: "Growth Your Momentum-PT"</div>
+                  <div class="contact-info">수상: "2023년 최고의 피트니스 웹사이트"로 선정</div>
+               </div>
+            </div>
+            <div class="col-md-4 footer-section">
+               <h4>Contact Us</h4>
+               <div class="dimmed-text">
+                  <div>주소: 서울시 송파구 가락동</div>
+                  <div>전화: 1588-3819 (평일 9:00-18:00)</div>
+                  <div>결제도용신고: 1588-3816</div>
+                  <div>이메일: help@gympt.com</div>
+                  <div>고객센터 이용안내: 고객님의 소중한 의견을 기다립니다.</div>
+               </div>
+            </div>
+         </div>
+         <hr>
+         <div class="row">
+            <div class="col-md-12">
+               <p class="text-center">&copy; 2023 GYM_PT. All Rights Reserved.</p>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- footer -->
+</body>
+</html>

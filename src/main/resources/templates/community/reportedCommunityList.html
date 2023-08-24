@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>GYM-PT</title>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<link
+   href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+   rel="stylesheet"
+   integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+   crossorigin="anonymous">
+<script
+   src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+   integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+   crossorigin="anonymous"></script>
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+	crossorigin="anonymous">
+<link th:href="@{/css/atag.css}" rel="stylesheet">
+<!-- a태그관련 스타일 -->
+<link th:href="@{/css/btnprimary.css}" rel="stylesheet">
+<!-- btn 스타일 -->
+<link th:href="@{/css/navbar.css}" rel="stylesheet">
+<!-- navbar 스타일 -->
+<link th:href="@{/css/mypage.css}" rel="stylesheet">
+<!-- mypage 스타일 -->
+<link th:href="@{/css/pagination.css}" rel="stylesheet">
+<!-- mypage 스타일 -->
+<link th:href="@{/css/footer.css}" rel="stylesheet">
+<!-- mypage 스타일 -->
+<style>
+body {
+	background-color: #212529;
+	color: white;
+}
+
+/* 테이블 스타일 */
+table {
+	width: 100%;
+}
+
+table thead th {
+	background-color: #007bff;
+	color: #fff;
+	text-align: center;
+	padding: 10px;
+}
+
+table tbody td {
+	text-align: center;
+	padding: 8px;
+}
+
+/* 알림 스타일 */
+#alertContainer {
+	position: fixed;
+	top: 10px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 9999;
+}
+
+#alertBox {
+	display: none;
+	position: relative;
+}
+
+.alert-success {
+	background-color: #28a745;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	padding: 10px 15px;
+}
+
+.custom-button {
+	background-color: #dc3545;
+	color: #fff;
+	border: none;
+	padding: 4px 8px;
+	margin-left: 5px;
+	margin-bottom: 5px;
+	border-radius: 3px;
+	cursor: pointer;
+	font-size: 12px;
+}
+
+/* Styling for the buttons on hover */
+.custom-button:hover {
+	background-color: #c82333;
+}
+</style>
+</head>
+<body>
+	<nav
+		class="navbar navbar-expand-lg navbar-light bg-light justify-content-start fixed-top">
+		<a th:href="@{/index}" class="btn logo-icon-button">
+         <img src="/logo/mainlogo2.png" alt="로고"
+         style="max-height: 15%; max-width: 15%;"> <span style="font-size: 24px;">GYM_PT</span>
+      </a>
+
+      <button id="searchToggle" class="btn btn-primary pt-2" type="button">
+         <i class="fas fa-search"></i>
+      </button>
+
+		<!-- 로그인한 사용자에게만 보여질 내용 -->
+		<div th:if="${#authentication.principal != 'anonymousUser'}">
+			<button id="myToggle" class="btn profile-icon-button" type="button">
+				<img th:src="@{/image/} + ${#authentication.principal.profile}"
+					alt="Profile Picture"
+					style="width: 30px; height: 30px; border-radius: 50%;">
+			</button>
+		</div>
+		<!-- 로그인하지 않은 사용자에게 보여질 내용 -->
+		<div th:unless="${#authentication.principal != 'anonymousUser'}">
+			<a href="#"></a>
+		</div>
+
+
+		<a th:href="@{/chat/room}" class="btn chat-icon-button" type="button">
+			<i class="material-icons">send</i>
+		</a>
+
+		<div id="searchFormWrapper"
+			class="d-none d-flex align-items-center mx-auto">
+			<form action="selectMember" method="get" class="ms-0"
+				id="selectMemberForm">
+				<!-- 컴퓨터용 -->
+				<input type="hidden" id="curPage" name="curPage" th:value="0">
+				<input type="hidden" id="rowSizePerPage" name="rowSizePerPage"
+					th:value="${rp}">
+				<div class="row justify-content-center">
+					<div class="col-auto">
+						<div class="input-group">
+							<select class="form-select" id="searchType" name="searchType"
+								th:value="${st}" style="display: none;">
+								<option value="">검색</option>
+								<option value="both" th:selected="${st == 'both'}">아이디
+									또는 닉네임</option>
+							</select> <input class="form-control bg-dark text-light" name="searchWord"
+								type="text" placeholder="🍳유저 검색" />
+							<button class="btn btn-primary" type="submit">검색</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<div th:if="${#authentication.principal != 'anonymousUser'}"
+			id="myFormWrapper"
+			class="d-none d-flex mx-auto flex-column align-items-center">
+			<img th:src="@{/image/} + ${#authentication.principal.profile}"
+				alt="Profile Picture"
+				style="width: 80px; height: 80px; border-radius: 50%;">
+			<p th:text="${#authentication.principal.nickname}" class="m-0"></p>
+			<p th:text="${#authentication.principal.username}"
+				style="color: gray;" class="m-0"></p>
+			<a
+				th:href="@{/getMember(id=${#authentication.principal.username})}"
+				style="color: white;" class="m-0"><i class="fas fa-user"></i>
+				마이 페이지</a> <a href="logout" onclick="return confirm('로그아웃 하시겠습니까?')"
+				style="color: white;" class="m-0"><i class="fas fa-sign-out-alt"></i>
+				로그아웃</a>
+			<!-- 로그인 안되어있을떄  -->
+		</div>
+	</nav>
+
+	<div class="sidebar">
+		<ul>
+			<!-- 로그인하지 않은 상태일 때 로그인 및 회원가입 링크를 보여줍니다 -->
+			<li th:if="${#authentication.principal == 'anonymousUser'}"
+				class="login-signup"><a th:href="@{/login}">로그인</a> <a
+				th:href="@{/insertMember}">회원가입</a></li>
+
+			<!-- 로그인한 상태일 때 사용자 닉네임을 보여줍니다 -->
+         <li th:unless="${#authentication.principal == 'anonymousUser'}"><span
+               th:text="${#authentication.principal.nickname}"></span>님 접속중
+         </li>
+
+			<li><hr></li>
+			<!-- New list item for horizontal rule -->
+			<li><a th:href="@{/index}"><i class="fas fa-home"></i> 홈</a></li>
+			<li><a th:href="@{/getCommunityList}"><i
+					class="fas fa-users"></i> 커뮤니티</a></li>
+			<li><a href="#" onclick="toggleSubMenu()"><i
+					class="fas fa-dumbbell"></i> 쇼핑몰</a>
+				<ul id="submenu" class="submenu">
+					<li><a th:href="@{/shopBoardList}"><i
+							class="fas fa-shopping-cart"></i> 쇼핑하기</a></li>
+					<li><a th:href="@{/cartList}"><i
+							class="fas fa-shopping-basket"></i> 장바구니</a></li>
+					<li><a th:href="@{/orderList}"><i class="fas fa-list-ul"></i>
+							주문목록</a></li>
+					<li><a th:href="@{/insertPoint}"><i class="fas fa-coins"></i>
+							포인트 충전</a></li>
+					<li><a th:href="@{/getBoardList}"><i
+							class="fas fa-headset"></i> 고객센터</a></li>
+				</ul></li>
+			<li><a th:href="@{/getNewsList}"><i class="fas fa-newspaper"></i>
+					뉴스</a></li>
+			<li><hr></li>
+			<!-- New list item for horizontal rule -->
+			<li><a th:href="@{/map}"><i class="fas fa-map-marker-alt"></i>
+					내 주변 헬스장 찾기</a></li>
+			<li><a th:href="@{/selectMember}"><i class="fas fa-user"></i>
+					유저 검색</a></li>
+			<li><a th:href="@{/getLikedCommunities}"><i
+					class="fas fa-heart"></i> 좋아요 한 게시물</a></li>
+			<li><hr></li>
+			<!-- New list item for horizontal rule -->
+			<li><a th:href="@{/getInformlist}"><i
+					class="fas fa-volume-up"></i> 공지사항</a></li>
+			<li><a th:href="@{/getBoardList}"><i class="fas fa-headset"></i>
+					문의사항</a></li>
+
+			<li><hr></li>
+			<li
+				th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+				<a th:href="@{/adminpage}"  style="color: #289AFF;"> <i class="fas fa-user"></i> 관리자 페이지
+			</a>
+			</li>
+
+			<!-- New list item for horizontal rule -->
+		</ul>
+	</div>
+
+
+	<script>
+		function toggleSubMenu() {
+			var submenu = document.getElementById('submenu');
+			submenu.classList.toggle('active');
+		}
+	</script>
+
+	<div class="sidebar-toggle">
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+	</div>
+
+
+
+	<script>
+		$(document).ready(function() {
+			$('.sidebar-toggle').on('click', function() {
+				$('.sidebar').toggleClass('active');
+				$(this).toggleClass('active');
+			});
+
+			$('.product-container').slick({
+				slidesToShow : 3,
+				slidesToScroll : 1,
+				prevArrow : $('.carousel-control.left'),
+				nextArrow : $('.carousel-control.right'),
+				responsive : [ {
+					breakpoint : 768,
+					settings : {
+						slidesToShow : 1
+					}
+				} ]
+			});
+		});
+
+		$(document).ready(function() {
+			$("#searchToggle").on('click', function() {
+				$("#searchFormWrapper").toggleClass('d-none'); // 검색창을 보이거나 숨김
+			});
+		});
+
+		$(document).ready(function() {
+			$("#myToggle").on('click', function() {
+				$("#myFormWrapper").toggleClass('d-none'); // 검색창을 보이거나 숨김
+			});
+		});
+	</script>
+	<!-- nav -->
+	<div class="container mt-5 pt-5">
+		<!-- 신고된 게시물 목록 테이블 -->
+		<h2 style="font-weight: bold;">신고된 게시물 목록</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>글번호</th>
+					<th>글내용</th>
+					<th>신고 사유</th>
+					<th>처리</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- 관리자가 신고된 게시물 목록을 조회한 결과를 반복하여 출력하는 부분 -->
+				<tr th:each="community : ${reportedCommunityList}">
+					<td th:text="${community.c_seq}" style="color: white;"></td>
+					<td th:text="${community.c_content}" style="color: white;"></td>
+					<td th:text="${community.report_reason}" style="color: white;"></td>
+					<td>
+						<form action="/processReport" method="post"
+							th:if="${!community.isProcessed()}">
+							<input type="hidden" name="c_seq" th:value="${community.c_seq}" />
+							<button type="button" class="custom-button"
+								data-bs-toggle="modal" data-bs-target="#reportConfirmModal"
+								onclick="processReport(this)">신고 처리</button>
+							<button type="button" class="custom-button"
+								data-bs-toggle="modal"
+								data-bs-target="#cancelReportConfirmModal"
+								onclick="cancelReport(this)">신고 취소</button>
+						</form> <span th:if="${community.isProcessed()}"
+						style="font-weight: bold; color: red;">신고 처리 완료</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<a href="getCommunityList" class="btn btn-primary">게시물 목록</a>
+	</div>
+
+	<!-- 알림을 띄우는 부분 -->
+	<div id="alertContainer">
+		<div id="alertBox"
+			class="alert alert-success alert-dismissible fade show">
+			<strong class="message"></strong>
+			<button type="button" class="btn-close" data-bs-dismiss="alert"
+				aria-label="Close"></button>
+		</div>
+	</div>
+
+	<!-- 신고 처리 확인 모달 -->
+	<div class="modal fade" id="reportConfirmModal" tabindex="-1"
+		aria-labelledby="reportConfirmModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content" style="background-color: #212529;">
+				<div class="modal-header">
+					<h5 class="modal-title" id="reportConfirmModalLabel"
+						style="font-weight: bold;">신고 처리</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>⚠ 신고 처리 하시겠습니까?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger"
+						onclick="processReportConfirm()">확인</button>
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal" onclick="cancelReportConfirm()">취소</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 취소 처리 확인 모달 -->
+	<div class="modal fade" id="cancelReportConfirmModal" tabindex="-1"
+		aria-labelledby="cancelReportConfirmModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content" style="background-color: #212529;">
+				<div class="modal-header">
+					<h5 class="modal-title" id="cancelReportConfirmModalLabel"
+						style="font-weight: bold;">신고 처리 취소</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>⚠️ 신고 처리를 취소하시겠습니까?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger"
+						onclick="cancelReportConfirm()">확인</button>
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">취소</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 페이징 -->
+	<div class="row align-items-start mt-3">
+		<ul class="btn-sm pagination justify-content-center">
+			<th:block th:if="${ curPage >= 2}">
+				<!-- 첫 페이지로 이동 -->
+				<li class="page-item"><a
+					th:href="@{/reportedCommunityList(curPage=1, rowSizePerPage=${pagingInfo.rowSizePerPage})}"
+					class="page-link" aria-disabled="${curPage == 1}"><i
+						class="fas fa-fast-backward"></i></a></li>
+
+				<!-- 이전 페이지로 이동 -->
+				<li class="page-item"><a
+					th:href="@{/reportedCommunityList(curPage=${curPage - 1}, rowSizePerPage=${pagingInfo.rowSizePerPage})}"
+					class="page-link" aria-disabled="${curPage == 1}"><i
+						class="fas fa-backward"></i></a></li>
+			</th:block>
+
+			<!-- 페이지 번호 표시 -->
+			<th:block th:each="page : ${#numbers.sequence(1, totalPage)}"
+				th:if="${totalPage > 1}">
+				<li class="page-item"><a
+					th:href="@{/reportedCommunityList(curPage=${page}, rowSizePerPage=${pagingInfo.rowSizePerPage})}"
+					class="page-link" th:text="${page}"></a></li>
+			</th:block>
+
+			<th:block th:if="${ curPage lt totalPage }">
+				<!-- 다음 페이지로 이동 -->
+				<li class="page-item"><a
+					th:href="@{/reportedCommunityList(curPage=${curPage + 1}, rowSizePerPage=${pagingInfo.rowSizePerPage})}"
+					class="page-link" aria-disabled="${curPage == totalPage}"><i
+						class="fas fa-forward"></i></a></li>
+			</th:block>
+			<th:block th:if="${ curPage < totalPage }">
+				<!-- 마지막 페이지로 이동 -->
+				<li class="page-item"><a
+					th:href="@{/reportedCommunityList(curPage=${totalPage}, rowSizePerPage=${pagingInfo.rowSizePerPage})}"
+					class="page-link" aria-disabled="${curPage == totalPage}"><i
+						class="fas fa-fast-forward"></i></a></li>
+			</th:block>
+		</ul>
+	</div>
+	<!-- 페이징 -->
+
+	<script th:inline="javascript">
+		// 신고 처리 버튼 클릭 시 알림 모달 띄우기
+		function processReport(button) {
+			$('#reportConfirmModal').data('callerButton', button); // 호출한 버튼 저장
+			$('#reportConfirmModal').modal('show'); // 확인 모달 표시
+		}
+
+		// 확인 모달의 확인 버튼 클릭 시 호출되는 함수
+		function processReportConfirm() {
+			var callerButton = $('#reportConfirmModal').data('callerButton');
+			if (callerButton) {
+				var form = callerButton.form;
+				if (form) {
+					var cSeq = form.elements['c_seq'].value; // c_seq 값 추출
+					var formData = new FormData();
+					formData.append('c_seq', cSeq);
+					formData.append('action', 'block'); // action 값을 'block'으로 추가
+
+					// AJAX로 폼 데이터 전송
+					$.ajax({
+						url : form.action,
+						type : 'post',
+						data : formData,
+						processData : false,
+						contentType : false,
+						success : function(response) {
+							showAlert('신고 처리 완료!', function() {
+								callerButton.disabled = true;
+								callerButton.textContent = '신고 처리 완료';
+							});
+							$('#reportConfirmModal').modal('hide'); // 확인 모달 닫기
+						},
+						error : function() {
+							showAlert('오류가 발생했습니다. 다시 시도해주세요.');
+						}
+					});
+				}
+			}
+		}
+
+		//취소 처리 버튼 클릭 시 알림 모달 띄우기
+		function cancelReport(button) {
+			$('#cancelReportConfirmModal').data('callerButton', button); // 호출한 버튼 저장
+			$('#cancelReportConfirmModal').modal('show'); // 확인 모달 표시
+		}
+
+		//취소 처리 확인 모달의 확인 버튼 클릭 시 호출되는 함수
+		function cancelReportConfirm() {
+			var callerButton = $('#cancelReportConfirmModal').data(
+					'callerButton');
+			if (callerButton) {
+				var form = callerButton.form;
+				if (form) {
+					var cSeq = form.elements['c_seq'].value; // c_seq 값 추출
+					var formData = new FormData();
+					formData.append('c_seq', cSeq);
+					formData.append('action', 'cancel'); // action 값을 'cancel'로 추가 (신고 취소 처리임을 구분)
+
+					// AJAX로 폼 데이터 전송
+					$
+							.ajax({
+								url : '/processReport', // Change the URL to match the endpoint for cancelling the report
+								type : 'post',
+								data : formData,
+								processData : false,
+								contentType : false,
+								success : function(response) {
+									showAlert(
+											'신고 취소 완료!',
+											function() {
+												// 필요에 따라 UI를 업데이트하거나 페이지를 다시 로드할 수 있습니다.
+												callerButton.disabled = true;
+												callerButton.textContent = '신고 취소 완료'; // Show the "신고 취소 완료" message on the button
+												// Example: Hide the "신고 처리" button and "신고 처리 완료" message
+												var processButton = callerButton.previousElementSibling;
+												processButton.style.display = 'none';
+												var processedMessage = callerButton.nextElementSibling;
+												processedMessage.style.display = 'inline';
+											});
+									$('#cancelReportConfirmModal')
+											.modal('hide'); // 확인 모달 닫기
+								},
+								error : function() {
+									showAlert('오류가 발생했습니다. 다시 시도해주세요.');
+								}
+							});
+				}
+			}
+		}
+
+		// 알림 보여주기
+		function showAlert(message, callback) {
+			var alertBox = $('#alertBox');
+			alertBox.find('.message').text(message);
+			alertBox.fadeIn('slow', function() {
+				setTimeout(function() {
+					alertBox.fadeOut('slow', function() {
+						if (typeof callback === 'function') {
+							callback();
+						}
+					});
+				}, 2000); // 2초 후에 알림을 사라지게 함
+			});
+		}
+	</script>
+
+	<script>
+		// 페이지당 게시물 수를 변경하면 호출되는 함수
+		function changeRowPerPage() {
+			var rowPerPage = $('#rowPerPage').val();
+			window.location.href = '/reportedCommunityList?rowSizePerPage='
+					+ rowPerPage;
+		}
+	</script>
+
+	<!-- footer -->
+	<div class="footer" style="margin-top: auto;">
+		<div class="container" align="left">
+			<div class="row">
+				<div class="col-md-4 footer-section">
+					<a href="#" class="footer-logo">GYM_PT</a>
+					<p class="dimmed-text">Growth Your Momentum-PT</p>
+					<div class="social-icons">
+						<a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+						<a href="#" class="twitter"><i class="fab fa-twitter"></i></a> <a
+							href="#" class="instagram"><i class="fab fa-instagram"></i></a> <a
+							href="#" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
+					</div>
+				</div>
+
+				<div class="col-md-4 footer-section">
+					<h4>About Us</h4>
+					<div class="dimmed-text">
+						<div class="contact-info">대표이사: 김연수 | 사업자등록 번호: 809-81-01574</div>
+						<div class="contact-info">영업 시간: 평일 9:00-18:00</div>
+						<div class="contact-info">회사 신념: "Growth Your Momentum-PT"</div>
+						<div class="contact-info">수상: "2023년 최고의 피트니스 웹사이트"로 선정</div>
+					</div>
+				</div>
+				<div class="col-md-4 footer-section">
+					<h4>Contact Us</h4>
+					<div class="dimmed-text">
+						<div>주소: 서울시 송파구 가락동</div>
+						<div>전화: 1588-3819 (평일 9:00-18:00)</div>
+						<div>결제도용신고: 1588-3816</div>
+						<div>이메일: help@gympt.com</div>
+						<div>고객센터 이용안내: 고객님의 소중한 의견을 기다립니다.</div>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<div class="row">
+				<div class="col-md-12">
+					<p class="text-center">&copy; 2023 GYM_PT. All Rights Reserved.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- footer -->
+</body>
+</html>

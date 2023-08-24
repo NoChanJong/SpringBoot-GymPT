@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>GYM-PT</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+	integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+	crossorigin="anonymous">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+	crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css" />
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+	integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+	crossorigin="anonymous">
+	
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css" />
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link th:href="@{/css/btnprimary.css}" rel="stylesheet"> <!-- btn 스타일 -->
+<link th:href="@{/css/pagination.css}" rel="stylesheet">
+<link th:href="@{/css/navbar.css}" rel="stylesheet"> <!-- navbar 스타일 -->
+    <link th:href="@{/css/footer.css}" rel="stylesheet"> <!-- footer 스타일 -->    
+    <link th:href="@{/css/atag.css}" rel="stylesheet"> <!-- a태그관련 스타일 -->
+<!-- paging 스타일 -->
+   <style>
+      body {
+         background-color: #212529;
+         color: #fff;
+         font-size: 13px;
+      }
+      .product-image {
+         width: 80%;
+         height: 80%;
+         object-fit: cover;
+         border-radius: 5%;
+      }
+      .product-card {
+         height: 100%;
+      }
+      .product-details {
+         padding: 10px;
+      }
+      .rounded-button {
+         border: 2px solid #fff;
+         border-radius: 10px;
+         width: 60px;
+         height: 60px;
+         text-align: center;
+         line-height: 20px;
+         font-size: 15px;
+         transition: all 0.3s ease;
+      }
+
+   .rounded-button i {
+      /* 아이콘 크기 조정 */
+      font-size: 25px;
+   }
+   .rounded-button:hover {
+      background-color: #9c42b5;
+      color: #fff;
+      transform: scale(1.1);
+   }
+   .all-button {
+      /* 변경할 색상 */
+      background-color: #8A2BE2;
+      color: #fff;
+   }
+   .food-button {
+      /* 변경할 색상 */
+      background-color: #8A2BE2;
+      color: #fff;
+   }
+   .clothing-button {
+      /* 변경할 색상 */
+      background-color: #8A2BE2;
+      color: #fff;
+   }
+   .equipment-button {
+      /* 변경할 색상 */
+      background-color: #8A2BE2;
+      color: #fff;
+   }
+   .product-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 20px;
+   }
+   
+   .product-name {
+      text-align: left; /* 왼쪽 정렬 */
+      color: #fff; /* 원하는 색상으로 수정 */
+      text-decoration: none; /* 밑줄 제거 */
+      font-size: 20px; /* 원하는 폰트 크기로 수정 */
+      white-space: normal; /* 텍스트 줄바꿈 허용 */
+   }
+   .product-name a {
+      color: #fff; /* 원하는 색상으로 수정 */
+      text-decoration: none; /* 밑줄 제거 */
+      text-align: left; /* 왼쪽 정렬 */
+      font-size: 18px; /* 원하는 폰트 크기로 수정 */
+   }
+
+   .product-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+   }
+   .product-price {
+      text-align: left; /* 왼쪽 정렬 */
+      color: #fff; /* 흰색으로 설정 */
+   }
+   .product-rating {
+      text-align: right; /* 오른쪽 정렬 */
+      display: flex;
+      align-items: center;
+   }
+   .product-rating i {
+      margin-left: 5px;
+   }
+      
+   .s_upload_thumb img {
+      width: 100%; /* 사진 너비 100%로 설정 */
+      height: auto; /* 사진 높이 자동 조정 */
+      object-fit: cover; /* 사진 비율 유지 */
+   }
+
+   /* product-card 스타일 수정 */
+   .product-card {
+      height: auto; /* 자동으로 컨텐츠에 맞게 높이 조정 */
+   }
+   
+      .product-rating i {
+      color: yellow; /* 노란색으로 설정 */
+   }
+   
+   .product-price {
+      text-align: left; /* 왼쪽 정렬 */
+      color: #fff; /* 흰색으로 설정 */
+      font-size: 14px; /* 원하는 폰트 크기로 수정 */
+   }
+   
+   .product-details {
+      padding: 10px 0; /* 상하 padding은 유지하고 좌우 padding은 0으로 설정 */
+   }
+      .sold-out-text {
+    color: red;
+    font-weight: bold;
+    font-size: 20px;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+   
+   @media (max-width: 767px) {
+  .row {
+    /* 휴대폰 화면에서는 여백을 줄입니다. */
+    margin: 0 -5px;
+  }
+  .col-auto {
+    /* 휴대폰 화면에서 컬럼 너비를 조정합니다. */
+    padding: 0 5px;
+  }
+}
+   </style>
+
+
+
+</head>
+<body style="background-color: #212529; overflow-x: hidden;">
+	<nav
+      class="navbar navbar-expand-lg navbar-light bg-light justify-content-start fixed-top">
+      <a th:href="@{/index}" class="btn logo-icon-button">
+         <img src="/logo/mainlogo2.png" alt="로고"
+         style="max-height: 15%; max-width: 15%;"> <span style="font-size: 24px;">GYM_PT</span>
+      </a>
+
+      <button id="searchToggle" class="btn btn-primary pt-2" type="button">
+         <i class="fas fa-search"></i>
+      </button>
+
+      <!-- 로그인한 사용자에게만 보여질 내용 -->
+      <div th:if="${#authentication.principal != 'anonymousUser'}">
+         <button id="myToggle" class="btn profile-icon-button" type="button">
+            <img th:src="@{/image/} + ${#authentication.principal.profile}"
+               alt="Profile Picture"
+               style="width: 30px; height: 30px; border-radius: 50%;">
+         </button>
+      </div>
+      <!-- 로그인하지 않은 사용자에게 보여질 내용 -->
+      <div th:unless="${#authentication.principal != 'anonymousUser'}">
+         <a href="#"></a>
+      </div>
+
+
+      <a th:href="@{/chat/room}" class="btn chat-icon-button" type="button">
+         <i class="material-icons">send</i>
+      </a>
+
+      <div id="searchFormWrapper"
+         class="d-none d-flex align-items-center mx-auto">
+			<form action="shopBoardList" method="get" id="boardForm" class="ms-0">
+				<input type="hidden" id="curPage" name="curPage" th:value="0">
+				<input type="hidden" id="rowSizePerPage" name="rowSizePerPage"
+					th:value="${rp}">
+				<div class="row mt-3 justify-content-center">
+					<div class="col-auto">
+						<div class="input-group">
+							<input class="form-control bg-dark text-light" name="searchWord"
+								type="text" placeholder="상품 검색하기" />
+							<button class="btn btn-primary" type="submit">검색</button>
+
+						</div>
+					</div>
+				</div>
+			</form>
+      </div>
+
+      <div th:if="${#authentication.principal != 'anonymousUser'}"
+         id="myFormWrapper"
+         class="d-none d-flex mx-auto flex-column align-items-center">
+         <img th:src="@{/image/} + ${#authentication.principal.profile}"
+            alt="Profile Picture"
+            style="width: 80px; height: 80px; border-radius: 50%;">
+         <p th:text="${#authentication.principal.nickname}" class="m-0"></p>
+         <p th:text="${#authentication.principal.username}"
+            style="color: gray;" class="m-0"></p>
+			<a
+				th:href="@{/getMember(id=${#authentication.principal.username})}"
+				style="color: white;" class="m-0"><i class="fas fa-user"></i>
+				마이 페이지</a> <a href="logout" onclick="return confirm('로그아웃 하시겠습니까?')"
+				style="color: white;" class="m-0"><i class="fas fa-sign-out-alt"></i>
+				로그아웃</a>
+         <!-- 로그인 안되어있을떄  -->
+      </div>
+   </nav>
+
+   <div class="sidebar">
+      <ul>
+         <!-- 로그인하지 않은 상태일 때 로그인 및 회원가입 링크를 보여줍니다 -->
+         <li th:if="${#authentication.principal == 'anonymousUser'}"
+            class="login-signup"><a th:href="@{/login}">로그인</a> <a
+            th:href="@{/insertMember}">회원가입</a></li>
+
+         <!-- 로그인한 상태일 때 사용자 닉네임을 보여줍니다 -->
+         <li th:unless="${#authentication.principal == 'anonymousUser'}"><span
+               th:text="${#authentication.principal.nickname}"></span>님 접속중
+         </li>
+
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/index}"><i class="fas fa-home"></i> 홈</a></li>
+         <li><a th:href="@{/getCommunityList}"><i
+               class="fas fa-users"></i> 커뮤니티</a></li>
+         <li><a href="#" onclick="toggleSubMenu()" style="color: #289AFF;"><i
+               class="fas fa-dumbbell"></i> 쇼핑몰</a>
+            <ul id="submenu" class="submenu">
+               <li><a th:href="@{#}" style="color: #289AFF;"><i
+                     class="fas fa-shopping-cart"></i> 쇼핑하기</a></li>
+               <li><a th:href="@{/cartList}"><i
+                     class="fas fa-shopping-basket"></i> 장바구니</a></li>
+               <li><a th:href="@{/orderList}"><i class="fas fa-list-ul"></i>
+                     주문목록</a></li>
+               <li><a th:href="@{/insertPoint}"><i class="fas fa-coins"></i>
+                     포인트 충전</a></li>
+               <li><a th:href="@{/getBoardList}"><i
+                     class="fas fa-headset"></i> 고객센터</a></li>
+            </ul></li>
+         <li><a th:href="@{/getNewsList}"><i class="fas fa-newspaper"></i>
+               뉴스</a></li>
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/map}"><i class="fas fa-map-marker-alt"></i>
+               내 주변 헬스장 찾기</a></li>
+         <li><a th:href="@{/selectMember}"><i class="fas fa-user"></i>
+               유저 검색</a></li>
+         <li><a th:href="@{/getLikedCommunities}"><i
+               class="fas fa-heart"></i> 좋아요 한 게시물</a></li>
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/getInformlist}"><i
+               class="fas fa-volume-up"></i> 공지사항</a></li>
+         <li><a th:href="@{/getBoardList}"><i class="fas fa-headset"></i>
+               문의사항</a></li>
+
+         <li><hr></li>
+         <li
+            th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+            <a th:href="@{/adminpage}"> <i class="fas fa-user"></i> 관리자 페이지
+         </a>
+         </li>
+      
+         <!-- New list item for horizontal rule -->
+      </ul>
+   </div>
+
+
+   <script>
+      function toggleSubMenu() {
+         var submenu = document.getElementById('submenu');
+         submenu.classList.toggle('active');
+      }
+   </script>
+
+   <div class="sidebar-toggle">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+   </div>
+
+
+
+   <script>
+      $(document).ready(function() {
+         $('.sidebar-toggle').on('click', function() {
+            $('.sidebar').toggleClass('active');
+            $(this).toggleClass('active');
+         });
+
+         $('.product-container').slick({
+            slidesToShow : 3,
+            slidesToScroll : 1,
+            prevArrow : $('.carousel-control.left'),
+            nextArrow : $('.carousel-control.right'),
+            responsive : [ {
+               breakpoint : 768,
+               settings : {
+                  slidesToShow : 1
+               }
+            } ]
+         });
+      });
+
+      $(document).ready(function() {
+         $("#searchToggle").on('click', function() {
+            $("#searchFormWrapper").toggleClass('d-none'); // 검색창을 보이거나 숨김
+         });
+      });
+
+      $(document).ready(function() {
+         $("#myToggle").on('click', function() {
+            $("#myFormWrapper").toggleClass('d-none'); // 검색창을 보이거나 숨김
+         });
+      });
+   </script>
+   <!-- nav -->
+
+	<div class="container mt-5 pt-5" align="center">
+      <div class="container">
+         <form action="shopBoardList" method="get" id="boardForm">   
+            <input type="hidden" id="curPage" name="curPage"  th:value="0">
+            <input type="hidden" id="rowSizePerPage" name="rowSizePerPage" th:value="${rp}">
+            <div class="row mt-3 justify-content-center">
+               
+<div class="col-auto me-1">            
+   <button type="submit" class="btn rounded-button all-button" name="searchType" value="">
+      <i class="fas fa-globe"></i>
+   </button>
+</div>
+<div class="col-auto me-1">            
+   <button type="submit" class="btn rounded-button food-button" name="searchType" value="식품">
+      <i class="fas fa-utensils"></i>
+   </button>
+</div>
+<div class="col-auto me-1">            
+   <button type="submit" class="btn rounded-button clothing-button" name="searchType" value="의류">
+      <i class="fas fa-tshirt"></i>
+   </button>
+</div>
+<div class="col-auto me-1">            
+   <button type="submit" class="btn rounded-button equipment-button" name="searchType" value="장비">
+      <i class="fas fa-dumbbell"></i>
+   </button>
+</div>
+
+            </div>
+         </form>
+         <br>
+         <ul class="row row-cols-2 row-cols-md-4" style="padding-left: 0;">
+            <li th:each="shop, state : ${pagedResult.getContent()}" style="list-style-type: none;">
+               <div class="col">
+                  <div class="product-item">
+                     <div class="product-card">
+                        <div class="s_upload_thumb" th:if="${not #strings.isEmpty(shop.sUploadThumb)}">
+                           <div th:each="upload : ${shop.sUploadThumb.split(',')}">
+                           <a th:href="@{/shop/shopBoardView(sSeq=${shop.sSeq})}">
+                              <img th:src="@{'/upload/' + ${upload}}" alt="사진" class="product-image">
+                           </a>
+                           </div>
+                        </div>
+                        <div class="product-details">
+                           <div class="product-name">
+                              <a th:href="@{/shop/shopBoardView(sSeq=${shop.sSeq})}" th:text="${shop.sName}"></a>
+                           </div>
+                           <div class="product-info">
+                              <div class="product-price">
+                                 <span class="s_price" th:text="${#numbers.formatInteger(shop.sPrice, 3, 'COMMA') + '원'}"></span>
+                              </div>
+                              <span th:if="${shop.sAmount &lt;= 0}" class="sold-out-text">SOLD OUT</span>
+                              <div class="product-rating">
+                              <i class="fas fa-star"></i>
+                                 <div th:text="${shop.sRating}"></div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </li>
+         </ul>
+      </div>
+                     <button class="upbtn" type="button" onclick="location.href='shopBoardRegister'"
+                   th:if="${session.member.role == 'admin'}">✏</button>
+   </div>
+    <div class="align-items-start mt-3"
+      th:if="${pagedResult.getTotalElements() > 0}">
+      <ul class="btn-sm pagination justify-content-center">
+         <th:block th:if="${cp >= 1 }">
+            <li class="page-item"><a
+               th:href="@{/shopBoardList(curPage=0, rowSizePerPage=${rp}, searchType=${st}, searchWord=${sw})}"
+               class="page-link"><i class="fas fa-fast-backward"></i></a></li>
+            <li class="page-item"><a
+               th:href="@{/shopBoardList(curPage=${sp-1}, rowSizePerPage=${rp}, searchType=${st}, searchWord=${sw})}"
+               class="page-link"><i class="fas fa-backward"></i></a></li>
+         </th:block>
+
+         <th:block
+            th:each="page : ${#numbers.sequence(pagingInfo.getStartPage(), pagingInfo.getEndPage())}"
+            th:if="${pagingInfo.getTotalPageCount() > 1}">
+            <li class="page-item"
+               th:classappend="${(page-1)==pagingInfo.getCurPage() ? 'active' : ''}"><a
+               class="page-link"
+               th:href="@{/shopBoardList(curPage=${page-1}, rowSizePerPage=${rp}, searchType=${st}, searchWord=${sw})}"
+               th:text="${page}"></a></li>
+         </th:block>
+
+         <th:block th:if="${ cp + 1 lt tp }">
+            <li class="page-item"><a
+               th:href="@{/shopBoardList(curPage=${cp + 1}, rowSizePerPage=${rp}, searchType=${st}, searchWord=${sw})}"
+               class="page-link"><i class="fas fa-forward"></i></a></li>
+         </th:block>
+         <th:block th:if="${cp + 1 < tp}">
+            <li class="page-item"><a
+               th:href="@{/shopBoardList(curPage=${tp-1}, rowSizePerPage=${rp}, searchType=${st}, searchWord=${sw})}"
+               class="page-link"><i class="fas fa-fast-forward"></i></a></li>
+         </th:block>
+      </ul>
+<!--             <div class="col-auto me-1">
+               <div class="input-group mb-3">
+                  <span class="input-group-text"><i class="fas fa-list"></i></span>
+                  <select class="col-auto form-select" id="rowPerPage" name="rowPerPage">
+                     <th:block th:each="num : ${#numbers.sequence(10, 50, 10)}">
+                        <option th:value="${num}" th:text="${num}" th:attr="selected=${rp==num ? 'true' : 'false'}"></option>                                                
+                     </th:block>                                 
+                  </select>
+               </div>
+            </div> -->
+         </div>
+
+	
+	   <!-- footer -->
+    <div class="footer" style="margin-top: auto;">
+        <div class="container" align="left">
+            <div class="row">
+                <div class="col-md-4 footer-section">
+                    <a href="#" class="footer-logo">GYM_PT</a>
+                    <p class="dimmed-text">Growth Your Momentum-PT</p>
+                    <div class="social-icons">
+                        <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 footer-section">
+                    <h4>About Us</h4>
+                    <div class="dimmed-text">
+                        <div class="contact-info">대표이사: 김연수 | 사업자등록 번호: 809-81-01574</div>
+                        <div class="contact-info">영업 시간: 평일 9:00-18:00</div>
+                        <div class="contact-info">회사 신념: "Growth Your Momentum-PT"</div>
+                        <div class="contact-info">수상: "2023년 최고의 피트니스 웹사이트"로 선정</div>
+                    </div>
+                </div>
+                <div class="col-md-4 footer-section">
+                    <h4>Contact Us</h4>
+                    <div class="dimmed-text">
+                        <div>주소: 서울시 송파구 가락동</div>
+                        <div>전화: 1588-3819 (평일 9:00-18:00)</div>
+                        <div>결제도용신고: 1588-3816</div>
+                        <div>이메일: help@gympt.com</div>
+                        <div>고객센터 이용안내: 고객님의 소중한 의견을 기다립니다.</div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="text-center">&copy; 2023 GYM_PT. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+   <!-- footer -->
+</body>
+</html>

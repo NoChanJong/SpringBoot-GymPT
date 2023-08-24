@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>GYM-PT</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+	integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+	crossorigin="anonymous">
+<link
+   href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+   rel="stylesheet"
+   integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+   crossorigin="anonymous">
+<script
+   src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+   integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+   crossorigin="anonymous"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+	integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+	crossorigin="anonymous">
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css" />
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+	integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+	crossorigin="anonymous">
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css" />
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link th:href="@{/css/btnprimary.css}" rel="stylesheet">
+<link th:href="@{/css/atag.css}" rel="stylesheet">
+<!-- a태그관련 스타일 -->
+<link th:href="@{/css/navbar.css}" rel="stylesheet">
+<!-- navbar 스타일 -->
+<link th:href="@{/css/footer.css}" rel="stylesheet">
+<!-- footer 스타일 -->
+<!-- btn 스타일 -->
+<script>
+	// 이미지 미리보기
+	function handleFileUpload(event) {
+		const files = event.target.files;
+		const imgContainer = document.getElementById('preview-container');
+		const previewText = document.getElementById('preview-text');
+		imgContainer.innerHTML = '';
+
+		if (files && files.length > 0) {
+			for (let i = 0; i < files.length; i++) {
+				const file = files[i];
+				const reader = new FileReader();
+				reader.onload = function() {
+					const img = document.createElement('img');
+					img.src = reader.result;
+					img.style.width = '100px';
+					img.style.height = '100px';
+					imgContainer.appendChild(img);
+				};
+				reader.readAsDataURL(file);
+			}
+			imgContainer.style.display = 'block';
+			previewText.style.display = 'none';
+		} else {
+			imgContainer.style.display = 'none';
+			previewText.style.display = 'block';
+		}
+	}
+</script>
+</head>
+
+<body style="background-color: #212529; color: white;">
+	<nav
+      class="navbar navbar-expand-lg navbar-light bg-light justify-content-start fixed-top">
+      <a th:href="@{/index}" class="btn logo-icon-button">
+         <img src="/logo/mainlogo2.png" alt="로고"
+         style="max-height: 15%; max-width: 15%;"> <span style="font-size: 24px;">GYM_PT</span>
+      </a>
+
+      <button id="searchToggle" class="btn btn-primary pt-2" type="button">
+         <i class="fas fa-search"></i>
+      </button>
+
+      <!-- 로그인한 사용자에게만 보여질 내용 -->
+      <div th:if="${#authentication.principal != 'anonymousUser'}">
+         <button id="myToggle" class="btn profile-icon-button" type="button">
+            <img th:src="@{/image/} + ${#authentication.principal.profile}"
+               alt="Profile Picture"
+               style="width: 30px; height: 30px; border-radius: 50%;">
+         </button>
+      </div>
+      <!-- 로그인하지 않은 사용자에게 보여질 내용 -->
+      <div th:unless="${#authentication.principal != 'anonymousUser'}">
+         <a href="#"></a>
+      </div>
+
+
+      <a th:href="@{/chat/room}" class="btn chat-icon-button" type="button">
+         <i class="material-icons">send</i>
+      </a>
+
+      <div id="searchFormWrapper"
+         class="d-none d-flex align-items-center mx-auto">
+			<form action="getNewsList" method="get" class="ms-0" id="newsForm">
+				<input type="hidden" id="curPage" name="curPage" th:value="0">
+				<input type="hidden" id="rowSizePerPage" name="rowSizePerPage"
+					th:value="${rp}">
+				<div class="row justify-content-center">
+					<div class="col-auto">
+						<div class="input-group">
+							<select class="form-select bg-dark text-light" id="searchType"
+								name="searchType">
+								<option value="" class="text-dark">검색</option>
+								<option value="n_title" th:selected="${st}=='n_title'"
+									class="text-dark">제목</option>
+								<option value="n_content" th:selected="${st}=='n_content'"
+									class="text-dark">기사내용</option>
+							</select> <input class="form-control bg-dark text-light" name="searchWord"
+								type="text" placeholder="뉴스 검색하기" />
+							<button class="btn btn-primary" type="submit">검색</button>
+						</div>
+					</div>
+				</div>
+			</form>
+      </div>
+
+      <div th:if="${#authentication.principal != 'anonymousUser'}"
+         id="myFormWrapper"
+         class="d-none d-flex mx-auto flex-column align-items-center">
+         <img th:src="@{/image/} + ${#authentication.principal.profile}"
+            alt="Profile Picture"
+            style="width: 80px; height: 80px; border-radius: 50%;">
+         <p th:text="${#authentication.principal.nickname}" class="m-0"></p>
+         <p th:text="${#authentication.principal.username}"
+            style="color: gray;" class="m-0"></p>
+			<a
+				th:href="@{/getMember(id=${#authentication.principal.username})}"
+				style="color: white;" class="m-0"><i class="fas fa-user"></i>
+				마이 페이지</a> <a href="logout" onclick="return confirm('로그아웃 하시겠습니까?')"
+				style="color: white;" class="m-0"><i class="fas fa-sign-out-alt"></i>
+				로그아웃</a>
+         <!-- 로그인 안되어있을떄  -->
+      </div>
+   </nav>
+
+   <div class="sidebar">
+      <ul>
+         <!-- 로그인하지 않은 상태일 때 로그인 및 회원가입 링크를 보여줍니다 -->
+         <li th:if="${#authentication.principal == 'anonymousUser'}"
+            class="login-signup"><a th:href="@{/login}">로그인</a> <a
+            th:href="@{/insertMember}">회원가입</a></li>
+
+         <!-- 로그인한 상태일 때 사용자 닉네임을 보여줍니다 -->
+         <li th:unless="${#authentication.principal == 'anonymousUser'}"><span
+               th:text="${#authentication.principal.nickname}"></span>님 접속중
+         </li>
+
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/index}"><i class="fas fa-home"></i> 홈</a></li>
+         <li><a th:href="@{/getCommunityList}"><i
+               class="fas fa-users"></i> 커뮤니티</a></li>
+         <li><a href="#" onclick="toggleSubMenu()"><i
+               class="fas fa-dumbbell"></i> 쇼핑몰</a>
+            <ul id="submenu" class="submenu">
+               <li><a th:href="@{/shopBoardList}"><i
+                     class="fas fa-shopping-cart"></i> 쇼핑하기</a></li>
+               <li><a th:href="@{/cartList}"><i
+                     class="fas fa-shopping-basket"></i> 장바구니</a></li>
+               <li><a th:href="@{/orderList}"><i class="fas fa-list-ul"></i>
+                     주문목록</a></li>
+               <li><a th:href="@{/insertPoint}"><i class="fas fa-coins"></i>
+                     포인트 충전</a></li>
+               <li><a th:href="@{/getBoardList}"><i
+                     class="fas fa-headset"></i> 고객센터</a></li>
+            </ul></li>
+         <li><a th:href="@{#}" style="color: #289AFF;"><i class="fas fa-newspaper"></i>
+               뉴스</a></li>
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/map}"><i class="fas fa-map-marker-alt"></i>
+               내 주변 헬스장 찾기</a></li>
+         <li><a th:href="@{/selectMember}"><i class="fas fa-user"></i>
+               유저 검색</a></li>
+         <li><a th:href="@{/getLikedCommunities}"><i
+               class="fas fa-heart"></i> 좋아요 한 게시물</a></li>
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/getInformlist}"><i
+               class="fas fa-volume-up"></i> 공지사항</a></li>
+         <li><a th:href="@{/getBoardList}"><i class="fas fa-headset"></i>
+               문의사항</a></li>
+
+         <li><hr></li>
+         <li
+            th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+            <a th:href="@{/adminpage}"> <i class="fas fa-user"></i> 관리자 페이지
+         </a>
+         </li>
+      
+         <!-- New list item for horizontal rule -->
+      </ul>
+   </div>
+
+
+   <script>
+      function toggleSubMenu() {
+         var submenu = document.getElementById('submenu');
+         submenu.classList.toggle('active');
+      }
+   </script>
+
+   <div class="sidebar-toggle">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+   </div>
+
+
+
+   <script>
+      $(document).ready(function() {
+         $('.sidebar-toggle').on('click', function() {
+            $('.sidebar').toggleClass('active');
+            $(this).toggleClass('active');
+         });
+
+         $('.product-container').slick({
+            slidesToShow : 3,
+            slidesToScroll : 1,
+            prevArrow : $('.carousel-control.left'),
+            nextArrow : $('.carousel-control.right'),
+            responsive : [ {
+               breakpoint : 768,
+               settings : {
+                  slidesToShow : 1
+               }
+            } ]
+         });
+      });
+
+      $(document).ready(function() {
+         $("#searchToggle").on('click', function() {
+            $("#searchFormWrapper").toggleClass('d-none'); // 검색창을 보이거나 숨김
+         });
+      });
+
+      $(document).ready(function() {
+         $("#myToggle").on('click', function() {
+            $("#myFormWrapper").toggleClass('d-none'); // 검색창을 보이거나 숨김
+         });
+      });
+   </script>
+   <!-- nav -->
+
+
+	<div class="container" align="center">
+		<div class="container mt-5 pt-5 mb-5 pb-5 justify-content-center">
+			<form th:action="insertNews" method="post"
+				enctype="multipart/form-data">
+				<div class="modal-content" style="background-color: #2c2f34;">
+					<div class="modal-header text-white">
+						<h1 class="motal-title fs-5" id="staticBackdropLabel">뉴스 등록하기</h1>
+					</div>
+					<!-- modal-header -->
+
+
+					<div class="modal-body">
+						<div id="preview-container"
+							style="display: none; position: relative; display: inline-block;"></div>
+						<p id="preview-text" class="preview-placeholder"
+							style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+							<i class="fas fa-camera"></i>
+						</p>
+						<div class="input-group mb-3">
+							<label class="input-group-text" for="uploadFiles"><i
+								class="fas fa-file"></i></label> <input type="file" class="form-control"
+								name="n_upload" id="n_uploadFiles"
+								aria-describedby="uploadFiles" aria-label="Upload" multiple
+								onchange="handleFileUpload(event)">
+
+						</div>
+						<div class="input-group mb-3">
+							<input type="text" name="n_title" class="form-control"
+								id="n_title" required placeholder="뉴스 제목">
+						</div>
+						<div class="input-group mb-3">
+							<textarea class="form-control" name="n_content" rows="15"
+								style="white-space: pre-line;" placeholder="뉴스 내용"></textarea>
+						</div>
+					</div>
+
+					<div class="modal-footer mb-5 pb-5">
+						<input type="submit" class="btn btn-success" value=" 뉴스 등록 "
+							onclick="return confirm('등록하시겠습니까?')" /> <a href="/getNewsList"
+							class="btn btn-primary">뉴스 목록으로 돌아가기</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	 <!-- footer -->
+    <div class="footer" style="margin-top: auto;">
+        <div class="container" align="left">
+            <div class="row">
+                <div class="col-md-4 footer-section">
+                    <a href="#" class="footer-logo">GYM_PT</a>
+                    <p class="dimmed-text">Growth Your Momentum-PT</p>
+                    <div class="social-icons">
+                        <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 footer-section">
+                    <h4>About Us</h4>
+                    <div class="dimmed-text">
+                        <div class="contact-info">대표이사: 김연수 | 사업자등록 번호: 809-81-01574</div>
+                        <div class="contact-info">영업 시간: 평일 9:00-18:00</div>
+                        <div class="contact-info">회사 신념: "Growth Your Momentum-PT"</div>
+                        <div class="contact-info">수상: "2023년 최고의 피트니스 웹사이트"로 선정</div>
+                    </div>
+                </div>
+                <div class="col-md-4 footer-section">
+                    <h4>Contact Us</h4>
+                    <div class="dimmed-text">
+                        <div>주소: 서울시 송파구 가락동</div>
+                        <div>전화: 1588-3819 (평일 9:00-18:00)</div>
+                        <div>결제도용신고: 1588-3816</div>
+                        <div>이메일: help@gympt.com</div>
+                        <div>고객센터 이용안내: 고객님의 소중한 의견을 기다립니다.</div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="text-center">&copy; 2023 GYM_PT. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+   <!-- footer -->
+   
+</body>
+</html>

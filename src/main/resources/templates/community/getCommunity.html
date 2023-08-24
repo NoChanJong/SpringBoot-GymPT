@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>GYM-PT</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<script
+   src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script
+   src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<link rel="stylesheet"
+   href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+   integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+   crossorigin="anonymous">
+<link
+   href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+   rel="stylesheet"
+   integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+   crossorigin="anonymous">
+<script
+   src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+   integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+   crossorigin="anonymous"></script>
+
+<link rel="stylesheet" type="text/css"
+   href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css" />
+<link rel="stylesheet"
+   href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet"
+   href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+   integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+   crossorigin="anonymous">
+
+<link th:href="@{/css/atag.css}" rel="stylesheet">
+<!-- a태그관련 스타일 -->
+<link th:href="@{/css/btnprimary.css}" rel="stylesheet">
+<!-- btn 스타일 -->
+<link th:href="@{/css/navbar.css}" rel="stylesheet">
+<!-- navbar 스타일 -->
+<link th:href="@{/css/footer.css}" rel="stylesheet">
+<!-- footer 스타일 -->
+</head>
+<style>
+.post-image {
+   text-align: center;
+}
+
+.post-image img {
+   width: 50%;
+   display: inline-block;
+   /* Ensures that the image respects the centering */
+}
+
+/* Additional styling for the Instagram-like appearance */
+body {
+   background-color: #fafafa;
+   margin: 0;
+   padding: 0;
+}
+
+h1 {
+   text-align: center;
+   margin-bottom: 30px;
+}
+
+.post-details {
+   display: flex;
+   align-items: center; /* 세로 가운데 정렬 */
+}
+
+.post-details img {
+   margin-right: 10px; /* 이미지 오른쪽 여백 */
+   width: 50px; /* 이미지 너비 */
+   height: 50px; /* 이미지 높이 */
+   border-radius: 50%;
+}
+
+.post-details .info {
+   display: flex;
+   flex-direction: column; /* 요소들을 세로로 배치 */
+}
+
+.post-details p, .post-details span {
+   margin: 0; /* 닉네임과 작성일 간격 없애기 */
+}
+
+.post-details span {
+   font-size: 12px;
+   color: lightgray;
+}
+
+.post-content {
+   margin-top: 20px;
+   padding-top: 10px;
+}
+
+.like-count {
+   font-weight: bold;
+}
+
+.input-container {
+   overflow: hidden; /* Clear the float */
+}
+
+.reply-form textarea {
+   width: 100%;
+   padding: 10px;
+   background-color: #212529;
+   color: #fff;
+   margin-top: 10px;
+   float: left; /* Float the textarea to the left */
+   border: none; /* Remove the border */
+   outline: none; /* Remove the outline when the textarea is focused */
+}
+
+.reply-form input[type="submit"] {
+   background-color: #0095f6;
+   color: #fff;
+   border: none;
+   padding: 10px 15px;
+   cursor: pointer;
+   border-radius: 5px;
+   float: right; /* Float the input (submit) to the right */
+   margin-top: 10px;
+   margin-left: 10px;
+}
+
+.instabtn {
+   background-color: #0095f6;
+   color: #fff;
+   border: none;
+   padding: 10px 15px;
+   cursor: pointer;
+   border-radius: 5px;
+   float: right; /* Float the input (submit) to the right */
+   margin-top: 10px;
+   text-decoration: none;
+}
+
+.reply {
+   margin-top: 10px;
+   padding-top: 10px;
+   display: flex;
+   align-items: center;
+}
+
+.reply img {
+   width: 30px;
+   height: 30px;
+   border-radius: 50%;
+   margin-right: 10px;
+}
+
+.reply-details-container {
+   display: flex;
+   flex-direction: column; /* 세로로 정렬 */
+   flex: 1; /* 빈 공간을 채우기 위해 flex 속성 추가 */
+   margin-left: 10px; /* 원하는 간격으로 조정 */
+}
+
+.reply-details {
+   display: flex;
+   align-items: center;
+}
+
+.reply-details span {
+   font-size: 12px;
+   color: lightgray;
+}
+
+.reply-content {
+   margin-top: 5px;
+   display: block;
+}
+
+.reply .reply-time {
+   margin: 0 5px; /* 양쪽에 5px의 margin 추가 (상하 0, 좌우 5px) */
+}
+
+.reply p {
+   margin: 0;
+}
+
+.reply button {
+   background: none;
+   border: none;
+   color: #0095f6;
+   cursor: pointer;
+}
+
+#imageCarousel .carousel-inner img {
+   width: 100%;
+   height: auto; /* 이미지의 원래 크기를 유지하도록 설정 */
+   object-fit: cover; /* 이미지를 틀에 꽉 차도록 조정 */
+   max-height: 800px; /* 최대 높이를 500px로 설정 */
+}
+
+.carousel-control-prev, .carousel-control-next {
+   z-index: 1;
+}
+
+.carousel-control-prev {
+   left: 10px;
+   bottom: 50%; /* 버튼이 아래쪽으로 고정됨 */
+   transform: translateY(50%); /* 위치 조정 */
+}
+
+.carousel-control-next {
+   right: 10px;
+   bottom: 50%; /* 버튼이 아래쪽으로 고정됨 */
+   transform: translateY(50%); /* 위치 조정 */
+}
+
+.like-icon {
+   width: 24px;
+   height: 24px;
+   cursor: pointer;
+}
+
+.post-image img {
+   width: 100%;
+}
+
+#imageCarousel .carousel-inner img {
+   width: 100%;
+   height: auto;
+   object-fit: cover;
+   max-height: 800px;
+}
+
+@media ( max-width : 1000px) {
+   #imageCarousel .carousel-inner img {
+      height: 300px; /* 작은 화면일 때 이미지 높이를 300px로 고정 */
+   }
+}
+</style>
+<body style="background-color: #212529; overflow-x: hidden;">
+   <nav
+      class="navbar navbar-expand-lg navbar-light bg-light justify-content-start fixed-top">
+      <a th:href="@{/index}" class="btn logo-icon-button">
+         <img src="/logo/mainlogo2.png" alt="로고"
+         style="max-height: 15%; max-width: 15%;"> <span style="font-size: 24px;">GYM_PT</span>
+      </a>
+
+      <button id="searchToggle" class="btn btn-primary pt-2" type="button">
+         <i class="fas fa-search"></i>
+      </button>
+
+      <!-- 로그인한 사용자에게만 보여질 내용 -->
+      <div th:if="${#authentication.principal != 'anonymousUser'}">
+         <button id="myToggle" class="btn profile-icon-button" type="button">
+            <img th:src="@{/image/} + ${#authentication.principal.profile}"
+               alt="Profile Picture"
+               style="width: 30px; height: 30px; border-radius: 50%;">
+         </button>
+      </div>
+      <!-- 로그인하지 않은 사용자에게 보여질 내용 -->
+      <div th:unless="${#authentication.principal != 'anonymousUser'}">
+         <a href="#"></a>
+      </div>
+
+
+      <a th:href="@{/chat/room}" class="btn chat-icon-button" type="button">
+         <i class="material-icons">send</i>
+      </a>
+
+      <div id="searchFormWrapper"
+         class="d-none d-flex align-items-center mx-auto">
+			<form action="selectMember" method="get" class="ms-0 mb-5 mt-5 pt-5"
+				id="selectMemberForm">
+				<!-- 컴퓨터용 -->
+				<input type="hidden" id="curPage" name="curPage" th:value="0">
+				<input type="hidden" id="rowSizePerPage" name="rowSizePerPage"
+					th:value="${rp}">
+				<div class="row mt-3 justify-content-center">
+					<div class="col-auto me-1">
+						<select class="form-select" id="searchType" name="searchType"
+							th:value="${st}" style="display: none;">
+							<option value="">검색</option>
+							<option value="both" th:selected="${st == 'both'}">아이디
+								또는 닉네임</option>
+						</select>
+					</div>
+					<div class="col-6 me-1">
+						<input class="form-control me-2 bg-dark text-light"
+							name="searchWord" type="text" placeholder="🍳검색" />
+					</div>
+					<div class="col-auto btn-group">
+						<input type="submit" class="col-1 btn btn-success me-2" value="검색">
+					</div>
+				</div>
+			</form>
+		</div>
+
+      <div th:if="${#authentication.principal != 'anonymousUser'}"
+         id="myFormWrapper"
+         class="d-none d-flex mx-auto flex-column align-items-center">
+         <img th:src="@{/image/} + ${#authentication.principal.profile}"
+            alt="Profile Picture"
+            style="width: 80px; height: 80px; border-radius: 50%;">
+         <p th:text="${#authentication.principal.nickname}" class="m-0"></p>
+         <p th:text="${#authentication.principal.username}"
+            style="color: gray;" class="m-0"></p>
+			<a
+				th:href="@{/getMember(id=${#authentication.principal.username})}"
+				style="color: white;" class="m-0"><i class="fas fa-user"></i>
+				마이 페이지</a> <a href="logout" onclick="return confirm('로그아웃 하시겠습니까?')"
+				style="color: white;" class="m-0"><i class="fas fa-sign-out-alt"></i>
+				로그아웃</a>
+         <!-- 로그인 안되어있을떄  -->
+      </div>
+   </nav>
+
+   <div class="sidebar">
+      <ul>
+         <!-- 로그인하지 않은 상태일 때 로그인 및 회원가입 링크를 보여줍니다 -->
+         <li th:if="${#authentication.principal == 'anonymousUser'}"
+            class="login-signup"><a th:href="@{/login}">로그인</a> <a
+            th:href="@{/insertMember}">회원가입</a></li>
+
+         <!-- 로그인한 상태일 때 사용자 닉네임을 보여줍니다 -->
+         <li th:unless="${#authentication.principal == 'anonymousUser'}"><span
+               th:text="${#authentication.principal.nickname}"></span>님 접속중
+         </li>
+
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/index}"><i class="fas fa-home"></i> 홈</a></li>
+         <li><a th:href="@{/getCommunityList}" style="color: #289AFF;"><i
+               class="fas fa-users"></i> 커뮤니티</a></li>
+         <li><a href="#" onclick="toggleSubMenu()"><i
+               class="fas fa-dumbbell"></i> 쇼핑몰</a>
+            <ul id="submenu" class="submenu">
+               <li><a th:href="@{/shopBoardList}"><i
+                     class="fas fa-shopping-cart"></i> 쇼핑하기</a></li>
+               <li><a th:href="@{/cartList}"><i
+                     class="fas fa-shopping-basket"></i> 장바구니</a></li>
+               <li><a th:href="@{/orderList}"><i class="fas fa-list-ul"></i>
+                     주문목록</a></li>
+               <li><a th:href="@{/insertPoint}"><i class="fas fa-coins"></i>
+                     포인트 충전</a></li>
+               <li><a th:href="@{/getBoardList}"><i
+                     class="fas fa-headset"></i> 고객센터</a></li>
+            </ul></li>
+         <li><a th:href="@{/getNewsList}"><i class="fas fa-newspaper"></i>
+               뉴스</a></li>
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/map}"><i class="fas fa-map-marker-alt"></i>
+               내 주변 헬스장 찾기</a></li>
+         <li><a th:href="@{/selectMember}"><i class="fas fa-user"></i>
+               유저 검색</a></li>
+         <li><a th:href="@{/getLikedCommunities}"><i
+               class="fas fa-heart"></i> 좋아요 한 게시물</a></li>
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/getInformlist}"><i
+               class="fas fa-volume-up"></i> 공지사항</a></li>
+         <li><a th:href="@{/getBoardList}"><i class="fas fa-headset"></i>
+               문의사항</a></li>
+
+         <li><hr></li>
+         <li
+            th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+            <a th:href="@{/adminpage}"> <i class="fas fa-user"></i> 관리자 페이지
+         </a>
+         </li>
+      
+         <!-- New list item for horizontal rule -->
+      </ul>
+   </div>
+
+
+   <script>
+      function toggleSubMenu() {
+         var submenu = document.getElementById('submenu');
+         submenu.classList.toggle('active');
+      }
+   </script>
+
+   <div class="sidebar-toggle">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+   </div>
+
+
+
+   <script>
+      $(document).ready(function() {
+         $('.sidebar-toggle').on('click', function() {
+            $('.sidebar').toggleClass('active');
+            $(this).toggleClass('active');
+         });
+
+         $('.product-container').slick({
+            slidesToShow : 3,
+            slidesToScroll : 1,
+            prevArrow : $('.carousel-control.left'),
+            nextArrow : $('.carousel-control.right'),
+            responsive : [ {
+               breakpoint : 768,
+               settings : {
+                  slidesToShow : 1
+               }
+            } ]
+         });
+      });
+
+      $(document).ready(function() {
+         $("#searchToggle").on('click', function() {
+            $("#searchFormWrapper").toggleClass('d-none'); // 검색창을 보이거나 숨김
+         });
+      });
+
+      $(document).ready(function() {
+         $("#myToggle").on('click', function() {
+            $("#myFormWrapper").toggleClass('d-none'); // 검색창을 보이거나 숨김
+         });
+      });
+   </script>
+   <!-- nav -->
+
+   <div class="container pt-5 mt-5 mb-3">
+      <div th:align="left">
+         <!-- Your existing content here -->
+
+         <div class="post-details">
+            <a th:href="@{/getMember(id=${community.member.id})}"> <img
+               th:src="@{/image/} + ${community.member.profile}"
+               alt="Profile Picture">
+            </a>
+            <div class="info">
+               <a th:href="@{/getMember(id=${community.member.id})}"
+                  style="text-decoration: none;"> <span
+                  th:text="${community.member.nickname}" style="font-weight: bold;"></span>
+               </a> <span th:text="${#dates.format(community.c_date, 'yyyy-MM-dd HH:mm:ss')}"></span>
+            </div>
+         </div>
+
+         <!-- 캐러셀 컴포넌트를 추가합니다. -->
+         <div id="imageCarousel" class="carousel slide pt-3"
+            data-ride="carousel">
+            <div class="carousel-inner">
+               <!-- 이미지를 반복하여 캐러셀 아이템으로 추가합니다. -->
+               <div
+                  th:each="fileName, iterationStat : ${#strings.arraySplit(community.c_upload, ',')}"
+                  class="carousel-item"
+                  th:classappend="${iterationStat.first} ? 'active'">
+                  <div class="image-container">
+                     <img th:src="@{'/community/'+${fileName}}" alt="Image"
+                        class="carousel-img">
+                  </div>
+               </div>
+            </div>
+            <!-- 이미지가 여러 개인 경우에만 인디케이터를 생성합니다. -->
+            <th:block
+               th:if="${#strings.arraySplit(community.c_upload, ',').length > 1}">
+               <a class="carousel-control-prev" role="button" data-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Previous</span>
+               </a>
+               <a class="carousel-control-next" role="button" data-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+               </a>
+
+            </th:block>
+         </div>
+
+
+
+
+         <script th:inline="javascript">
+            $(document).ready(
+                  function() {
+                     // 왼쪽 화살표 클릭 시 이전 이미지로 넘어가도록 설정
+                     $('.carousel-control-prev').click(function(event) {
+                        event.preventDefault(); // 앵커 태그의 기본 동작 방지
+                        $('#imageCarousel').carousel('prev');
+                     });
+
+                     // 오른쪽 화살표 클릭 시 다음 이미지로 넘어가도록 설정
+                     $('.carousel-control-next').click(function(event) {
+                        event.preventDefault(); // 앵커 태그의 기본 동작 방지
+                        $('#imageCarousel').carousel('next');
+                     });
+
+                     $("#imageCarousel .carousel-inner img").css(
+                           "max-height", "800px");
+                  });
+         </script>
+
+         <!-- Likes and comments -->
+         <div>
+            <div class="like-container pt-3"
+               th:id="'likeContainer' + ${community.c_seq}"
+               th:attr="data-c-seq=${community.c_seq}, data-member-id=${memberId}, data-is-liked=${isLiked}">
+               <img th:if="${isLiked}" src="/image/fill-hearts.png"
+                  alt="Filled Hearts" class="like-icon" onclick="unlike(this)">
+               <img th:unless="${isLiked}" src="/image/empty-hearts.png"
+                  alt="Empty Hearts" class="like-icon" onclick="like(this)"> <span
+                  style="font-weight: bold;">좋아요</span> <span class="like-count"
+                  th:text="${community.likes.size()}"></span> <span
+                  style="font-weight: bold;">개</span>
+            </div>
+         </div>
+
+         <div class="post-content">
+            <p th:text="${community.c_content}"></p>
+         </div>
+         <!-- Rest of your content -->
+
+
+         <div class="post-content">
+            <div class="reply-form">
+               <!-- Create a new reply form -->
+               <!-- Display existing replies -->
+               <div th:each="reply : ${community.replies}" class="reply">
+                  <a th:href="@{/getMember(id=${reply.member.id})}"> <img
+                     th:src="@{/image/} + ${reply.member.profile}"
+                     alt="Profile Picture">
+                  </a>
+                  <div class="reply-details-container">
+                     <div class="reply-details">
+                        <a th:href="@{/getMember(id=${reply.member.id})}"
+                           style="text-decoration: none;"> <b><span
+                              th:text="${reply.member.nickname}"></span></b>
+                        </a> <span class="reply-time" th:text="${#dates.format(reply.crDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                        <button th:if="${reply.member.id == memberId}"
+                           th:attr="onclick='deleteReply(' + ${community.c_seq} + ', ' + ${reply.crSeq} + ')'"
+                           type="button">삭제</button>
+                     </div>
+                     <div class="reply-content">
+                        <span th:text="${reply.crContent}" ></span>
+                     </div>
+                  </div>
+               </div>
+
+               <form id="replyForm"
+                  th:action="@{'/api/' + ${community.c_seq} + '/reply/create'}"
+                  method="post">
+                  <div class="input-container">
+                     <textarea name="content" cols="30" rows="5"
+                        placeholder="댓글을 입력해주세요" required></textarea>
+                     <input type="hidden" name="memberId" th:value="${memberId}">
+                     <input type="submit" value="댓글 입력"> <a class="instabtn"
+                        th:href="@{/getCommunityList}">글목록</a>
+                     <div>
+                        <div
+                           th:if="${#authentication.principal.username == community.member.id || #authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+                           <a th:href="@{/updateCommunityView(c_seq=${community.c_seq})}"
+                              class="btn btn-dark mt-3">게시글 수정</a> <a
+                              th:href="@{/deleteCommunity(c_seq=${community.c_seq})}"
+                              class="btn btn-danger mt-3"
+                              onclick="return confirm('게시글을 삭제하시겠습니까?')">게시글 삭제</a>&nbsp;&nbsp;&nbsp;
+                        </div>
+                     </div>
+
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+    <!-- footer -->
+    <div class="footer" style="margin-top: auto;">
+        <div class="container" align="left">
+            <div class="row">
+                <div class="col-md-4 footer-section">
+                    <a href="#" class="footer-logo">GYM_PT</a>
+                    <p class="dimmed-text">Growth Your Momentum-PT</p>
+                    <div class="social-icons">
+                        <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 footer-section">
+                    <h4>About Us</h4>
+                    <div class="dimmed-text">
+                        <div class="contact-info">대표이사: 김연수 | 사업자등록 번호: 809-81-01574</div>
+                        <div class="contact-info">영업 시간: 평일 9:00-18:00</div>
+                        <div class="contact-info">회사 신념: "Growth Your Momentum-PT"</div>
+                        <div class="contact-info">수상: "2023년 최고의 피트니스 웹사이트"로 선정</div>
+                    </div>
+                </div>
+                <div class="col-md-4 footer-section">
+                    <h4>Contact Us</h4>
+                    <div class="dimmed-text">
+                        <div>주소: 서울시 송파구 가락동</div>
+                        <div>전화: 1588-3819 (평일 9:00-18:00)</div>
+                        <div>결제도용신고: 1588-3816</div>
+                        <div>이메일: help@gympt.com</div>
+                        <div>고객센터 이용안내: 고객님의 소중한 의견을 기다립니다.</div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="text-center">&copy; 2023 GYM_PT. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+   <!-- footer -->
+
+
+   <script th:inline="javascript">
+      /* 좋아요 기능 JS */
+      function like(element) {
+         var likeContainer = $(element).closest('.like-container');
+         var c_seq = likeContainer.data('c-seq');
+         var member = likeContainer.data('member-id');
+         var likeCount = likeContainer.find('.like-count');
+         var likeIcon = likeContainer.find('.like-icon');
+
+         $.ajax({
+            type : "POST",
+            url : '/' + c_seq + '/like?memberId=' + member,
+            success : function() {
+               var count = parseInt(likeCount.text());
+               likeCount.text(count + 1);
+               likeIcon.attr('src', '/image/fill-hearts.png');
+               likeIcon.attr('onclick', 'unlike(this)');
+               likeContainer.data("is-liked", true);
+            }
+         });
+      }
+
+      function unlike(element) {
+         var likeContainer = $(element).closest('.like-container');
+         var c_seq = likeContainer.data('c-seq');
+         var member = likeContainer.data('member-id');
+         var likeCount = likeContainer.find('.like-count');
+         var likeIcon = likeContainer.find('.like-icon');
+
+         $.ajax({
+            type : "DELETE",
+            url : '/' + c_seq + '/like?memberId=' + member,
+            success : function() {
+               var count = parseInt(likeCount.text());
+               likeCount.text(count - 1);
+               likeIcon.attr('src', '/image/empty-hearts.png');
+               likeIcon.attr('onclick', 'like(this)');
+               likeContainer.data("is-liked", false);
+            }
+         });
+      }
+   </script>
+
+   <script th:inline="javascript">
+      $(document).ready(function() {
+         $("#replyForm").submit(function(event) {
+            event.preventDefault(); // 기본 폼 제출 동작 막기
+
+            // 폼 데이터 시리얼라이즈
+            var formData = $(this).serialize();
+
+            // 댓글 생성을 위한 AJAX 요청 보내기
+            $.ajax({
+               type : "POST",
+               url : $(this).attr("action"),
+               data : formData,
+               success : function() {
+                  alert("댓글이 성공적으로 입력되었습니다.");
+                  location.reload(); // 새 댓글을 보여주기 위해 페이지 새로고침
+               },
+               error : function() {
+                  alert("댓글 입력에 실패하였습니다.");
+               }
+            });
+         });
+      });
+
+      function deleteReply(c_seq, replyId) {
+         if (confirm("정말 삭제하시겠습니까?")) {
+            $.ajax({
+               type : "DELETE",
+               url : '/api/' + c_seq + '/reply/' + replyId + '/delete',
+               success : function() {
+                  location.reload(); // Page reload after successful deletion
+               },
+               error : function() {
+                  alert("Failed to delete reply");
+               }
+            });
+         }
+      }
+   </script>
+</body>
+</html>

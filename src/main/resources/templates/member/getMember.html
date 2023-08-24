@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="${member.nickname}"></title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+	integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+	crossorigin="anonymous">
+<link
+   href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+   rel="stylesheet"
+   integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+   crossorigin="anonymous">
+<script
+   src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+   integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+   crossorigin="anonymous"></script>
+
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css" />
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+	integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+	crossorigin="anonymous">
+
+<link th:href="@{/css/atag.css}" rel="stylesheet">
+<!-- a태그관련 스타일 -->
+<link th:href="@{/css/btnprimary.css}" rel="stylesheet">
+<!-- btn 스타일 -->
+<link th:href="@{/css/mypage.css}" rel="stylesheet">
+<!-- mypage 스타일 -->
+<link th:href="@{/css/navbar.css}" rel="stylesheet">
+<!-- navbar 스타일 -->
+<link th:href="@{/css/footer.css}" rel="stylesheet">
+<!-- footer 스타일 -->
+</head>
+<style>
+/* CSS styles for the cards and the grid layout */
+.image-grid {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+@media ( max-width : 767px) {
+	.image-grid .card {
+		border: none; /* 카드 주변 테두리 제거 */
+		padding: 1px 1px; /* 위아래 간격 조정 */
+		background-color: #212529;
+	}
+}
+
+@media ( min-width : 767px) {
+	.image-grid .card {
+		box-sizing: border-box; /* 패딩과 테두리를 요소의 너비에 포함 */
+		position: relative;
+		overflow: hidden;
+		border: none; /* 카드 주변 테두리 제거 */
+		background-color: #212529;
+		width: 423px;
+		height: 423px;
+		margin: 0; /* 여백 제거 */
+		padding: 1px 1px; /* 위아래 간격 조정 */
+	}
+}
+
+.card .overlay {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.7);
+	color: #fff;
+	display: flex;
+	justify-content: center; /* Center horizontally */
+	align-items: center; /* Center vertically */
+	opacity: 0;
+	transition: opacity 0.3s ease;
+	/* Updated styles for the overlay */
+	font-size: 18px; /* Adjust the font size for the entire overlay */
+	padding: 10px; /* Increase the padding to make it larger */
+}
+
+.card:hover .overlay {
+	opacity: 1;
+}
+
+.overlay i {
+	font-size: 24px;
+	/* Increase the font size for the font-awesome icons */
+}
+
+.overlay span {
+	font-size: 20px; /* Increase the font size for the text values */
+	/* ... (existing styles) ... */
+	padding: 0 10px;
+	display: flex; /* 아이콘과 텍스트를 flex 컨테이너로 설정 */
+	align-items: center; /* 수직 정렬을 위해 센터 정렬 */
+}
+
+/* Adjust the img to fill the .card container */
+.card img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	/* This will make the image fill the container, cropping if necessary */
+	object-position: center;
+	/* This will center the image within the container */
+}
+</style>
+<body style="background-color: #212529">
+	<nav
+      class="navbar navbar-expand-lg navbar-light bg-light justify-content-start fixed-top">
+     <a th:href="@{/index}" class="btn logo-icon-button">
+         <img src="/logo/mainlogo2.png" alt="로고"
+         style="max-height: 15%; max-width: 15%;"> <span style="font-size: 24px;">GYM_PT</span>
+      </a>
+
+      <button id="searchToggle" class="btn btn-primary pt-2" type="button">
+         <i class="fas fa-search"></i>
+      </button>
+
+
+      <!-- 로그인한 사용자에게만 보여질 내용 -->
+      <div th:if="${#authentication.principal != 'anonymousUser'}">
+         <button id="myToggle" class="btn profile-icon-button" type="button">
+            <img th:src="@{/image/} + ${#authentication.principal.profile}"
+               alt="Profile Picture"
+               style="width: 30px; height: 30px; border-radius: 50%;">
+         </button>
+      </div>
+      <!-- 로그인하지 않은 사용자에게 보여질 내용 -->
+      <div th:unless="${#authentication.principal != 'anonymousUser'}">
+         <a href="#"></a>
+      </div>
+
+
+      <a th:href="@{/chat/room}" class="btn chat-icon-button" type="button">
+         <i class="material-icons">send</i>
+      </a>
+
+      <div id="searchFormWrapper"
+         class="d-none d-flex align-items-center mx-auto">
+         <form action="selectMember" method="get" class="ms-0"
+            id="selectMemberForm">
+            <!-- 컴퓨터용 -->
+            <input type="hidden" id="curPage" name="curPage" th:value="0">
+            <input type="hidden" id="rowSizePerPage" name="rowSizePerPage"
+               th:value="${rp}">
+            <div class="row justify-content-center">
+               <div class="col-auto">
+                  <div class="input-group">
+                     <select class="form-select" id="searchType" name="searchType"
+                        th:value="${st}" style="display: none;">
+                        <option value="">검색</option>
+                        <option value="both" th:selected="${st == 'both'}">아이디
+                           또는 닉네임</option>
+                     </select> <input class="form-control bg-dark text-light" name="searchWord"
+                        type="text" placeholder="🍳유저 검색" />
+                     <button class="btn btn-primary" type="submit">검색</button>
+                  </div>
+               </div>
+            </div>
+         </form>
+      </div>
+
+      <div th:if="${#authentication.principal != 'anonymousUser'}"
+         id="myFormWrapper"
+         class="d-none d-flex mx-auto flex-column align-items-center">
+         <img th:src="@{/image/} + ${#authentication.principal.profile}"
+            alt="Profile Picture"
+            style="width: 80px; height: 80px; border-radius: 50%;">
+         <p th:text="${#authentication.principal.nickname}" class="m-0"></p>
+         <p th:text="${#authentication.principal.username}"
+            style="color: gray;" class="m-0"></p>
+			<a
+				th:href="@{/getMember(id=${#authentication.principal.username})}"
+				style="color: white;" class="m-0"><i class="fas fa-user"></i>
+				마이 페이지</a> <a href="logout" onclick="return confirm('로그아웃 하시겠습니까?')"
+				style="color: white;" class="m-0"><i class="fas fa-sign-out-alt"></i>
+				로그아웃</a>
+         <!-- 로그인 안되어있을떄  -->
+      </div>
+   </nav>
+
+   <div class="sidebar">
+      <ul>
+         <!-- 로그인하지 않은 상태일 때 로그인 및 회원가입 링크를 보여줍니다 -->
+         <li th:if="${#authentication.principal == 'anonymousUser'}"
+            class="login-signup"><a th:href="@{/login}">로그인</a> <a
+            th:href="@{/insertMember}">회원가입</a></li>
+
+         <!-- 로그인한 상태일 때 사용자 닉네임을 보여줍니다 -->
+         <li th:unless="${#authentication.principal == 'anonymousUser'}"><span
+               th:text="${#authentication.principal.nickname}"></span>님 접속중
+         </li>
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/index}"><i class="fas fa-home"></i> 홈</a></li>
+         <li><a th:href="@{/getCommunityList}"><i
+               class="fas fa-users"></i> 커뮤니티</a></li>
+         <li><a href="#" onclick="toggleSubMenu()"><i
+               class="fas fa-dumbbell"></i> 쇼핑몰</a>
+            <ul id="submenu" class="submenu">
+               <li><a th:href="@{/shopBoardList}"><i
+                     class="fas fa-shopping-cart"></i> 쇼핑하기</a></li>
+               <li><a th:href="@{/cartList}"><i
+                     class="fas fa-shopping-basket"></i> 장바구니</a></li>
+               <li><a th:href="@{/orderList}"><i class="fas fa-list-ul"></i>
+                     주문목록</a></li>
+               <li><a th:href="@{/insertPoint}"><i class="fas fa-coins"></i>
+                     포인트 충전</a></li>
+               <li><a th:href="@{/getBoardList}"><i
+                     class="fas fa-headset"></i> 고객센터</a></li>
+            </ul></li>
+         <li><a th:href="@{/getNewsList}"><i class="fas fa-newspaper"></i>
+               뉴스</a></li>
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/map}"><i class="fas fa-map-marker-alt"></i>
+               내 주변 헬스장 찾기</a></li>
+         <li><a th:href="@{#}" style="color: #289AFF;"><i class="fas fa-user"></i>
+               유저 검색</a></li>
+         <li><a th:href="@{/getLikedCommunities}"><i
+               class="fas fa-heart"></i> 좋아요 한 게시물</a></li>
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/getInformlist}"><i
+               class="fas fa-volume-up"></i> 공지사항</a></li>
+         <li><a th:href="@{/getBoardList}"><i class="fas fa-headset"></i>
+               문의사항</a></li>
+
+         <li><hr></li>
+         <li
+            th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+            <a th:href="@{/adminpage}"> <i class="fas fa-user"></i> 관리자 페이지
+         </a>
+         </li>
+      
+         <!-- New list item for horizontal rule -->
+      </ul>
+   </div>
+
+
+   <script>
+      function toggleSubMenu() {
+         var submenu = document.getElementById('submenu');
+         submenu.classList.toggle('active');
+      }
+   </script>
+
+   <div class="sidebar-toggle">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+   </div>
+
+
+
+   <script>
+      $(document).ready(function() {
+         $('.sidebar-toggle').on('click', function() {
+            $('.sidebar').toggleClass('active');
+            $(this).toggleClass('active');
+         });
+
+         $('.product-container').slick({
+            slidesToShow : 3,
+            slidesToScroll : 1,
+            prevArrow : $('.carousel-control.left'),
+            nextArrow : $('.carousel-control.right'),
+            responsive : [ {
+               breakpoint : 768,
+               settings : {
+                  slidesToShow : 1
+               }
+            } ]
+         });
+      });
+
+      $(document).ready(function() {
+         $("#searchToggle").on('click', function() {
+            $("#searchFormWrapper").toggleClass('d-none'); // 검색창을 보이거나 숨김
+         });
+      });
+
+      $(document).ready(function() {
+         $("#myToggle").on('click', function() {
+            $("#myFormWrapper").toggleClass('d-none'); // 검색창을 보이거나 숨김
+         });
+      });
+   </script>
+   <!-- nav -->
+   
+	<div class="container mt-5 mb-3 pt-5 pb-3" align="center">
+		<div class="modal-content" style="background-color: #2c2f34;">
+			<div class="modal-body">
+				<div class="m-0 getMember">
+					<div>
+						<img th:src="@{/image/} + ${member.profile}" alt="사진">
+					</div>
+					<br /> <font th:text="${member.nickname}"></font> <i
+						style="color: gray;">#<font th:text="${member.id}"></font></i> <br />
+					<br />
+					<div id="memberinfo">
+						<span
+							style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+							<font th:text="${member.height}"
+							style="font-weight: bolder; font-size: 140%;"></font> <font>키</font>
+						</span> <span
+							style="margin-left: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+							<font th:text="${member.weight}"
+							style="font-weight: bolder; font-size: 140%;"></font> <font>체중</font>
+						</span> <span
+							style="margin-left: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+							<font th:text="${member.gender}"
+							style="font-weight: bolder; font-size: 135%;"></font> <font>성별</font>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br />
+		<!-- 채팅 -->
+		<div id="app" v-cloak>
+			<form @submit.prevent="createRoom" method="post" action="room">
+				<input placeholder="roomName" type="hidden" class="form-control"
+					v-model="roomName"> <input placeholder="내 아이디 입력"
+					type="hidden" class="form-control" v-model="member1_id"> <input
+					placeholder="상대방 아이디 입력" type="hidden" class="form-control"
+					v-model="member2_id">
+				<button class="btn btn-success d-grid" type="submit"
+					th:unless="${#authentication.principal.username eq member.id}" style="width: 100%;">메시지</button>
+
+				<a th:href="@{/updateMember(id=${member.id})}"
+					class="btn btn-success d-grid"
+					th:if="${#authentication.principal.username eq member.id}">내 정보 수정</a>
+			</form>
+		</div>
+		<!-- 채팅 -->
+	</div>
+
+
+	<div class="container mb-3 mt-5 pt-3" align="left">
+		<div class="image-grid">
+			<div th:each="community : ${boardList}"
+				th:if="${community.member.id eq member.id}">
+				<div class="card">
+					<a th:href="@{/getCommunity(c_seq=${community.c_seq})}">
+						<div class="overlay">
+							<span class="like-count"><i class="far fa-heart"></i> <span
+								th:text="${community.c_like}"></span></span> <span
+								class="comment-count"><i class="far fa-comment"></i> <span
+								th:text="${community.replyCount}"></span></span> <span
+								class="view-count"><i class="far fa-eye"></i> <span
+								th:text="${community.c_cnt}"></span></span>
+						</div>
+					</a> <img th:src="@{'/community/'+${community.c_upload.split(',')[0]}}"
+						alt="Image">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- JavaScript -->
+	<script src="/webjars/vue/2.5.16/dist/vue.min.js"></script>
+	<script src="/webjars/axios/0.17.1/dist/axios.min.js"></script>
+	<script th:inline="javascript">
+    var memberId = /*[[${#authentication.principal.username}]]*/ '';
+    
+    var member2 = /*[[${member.id}]]*/ '';
+
+
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            room_id: '',
+            roomName: '채팅방',
+            member1_id: memberId,
+            member2_id: member2, 
+            chatrooms: []
+        },
+        created() {
+            this.findAllRoom();
+            
+        },
+        methods: {
+            findAllRoom: function() {
+                axios.get('/chat/rooms').then(response => {
+                    this.chatrooms = response.data.map(room => {
+                        return {
+                            room_id: room.room_id,
+                            roomName: room.roomName,
+                            member1_id: room.member1.id,
+                            member2_id: room.member2.id,
+                            member1_nickname: room.member1.nickname, 
+                            member2_nickname: room.member2.nickname,
+                            member1_profile: room.member1.profile,
+                            member2_profile: room.member2.profile,
+                            recentMessage: room.recentMessage || null, // 최근 메시지 추가
+                            recentMessageCreateDate: new Date(room.recentMessageCreateDate) // 생성 일자 추가
+                        };
+                    });
+                    // 채팅방을 recentMessageCreateDate가 제일 최근인 순서로 정렬
+                    this.chatrooms.sort((a, b) => {
+                        return b.recentMessageCreateDate - a.recentMessageCreateDate;
+                    });
+                }).catch(error => {
+                    console.error(error);
+                });
+            },
+            isUnread: function(room) {
+                const memberId = /*[[${#authentication.principal.username}]]*/ '';
+                if (memberId === room.member1_id) {
+                    return room.recentMessage && !room.recentMessage.member1Read;
+                } else if (memberId === room.member2_id) {
+                    return room.recentMessage && !room.recentMessage.member2Read;
+                }
+                return false;
+            }
+,
+            createRoom: function() {
+                if ("" === this.roomName) {
+                    alert("새로 고침 후 다시 이용해주세요.");
+                    return;
+                } else if ("" === this.member2_id) { // member2_id가 비어 있는 경우
+                    alert("새로 고침 후 다시 이용해주세요.");
+                    return;
+                } else {
+                    // 멤버 간 채팅방이 이미 존재하는지 확인
+                    var existingRoom = this.chatrooms.find(room => {
+                        return (
+                            (room.member1_id === this.member1_id && room.member2_id === this.member2_id) ||
+                            (room.member1_id === this.member2_id && room.member2_id === this.member1_id)
+                        );
+                    });
+
+                    if (existingRoom) {
+                        // 이미 존재하는 채팅방으로 이동
+                        this.enterRoom(existingRoom.room_id, existingRoom.member1_id, existingRoom.member2_id);
+                        return;
+                    }
+                	//================================================
+                    var params = new URLSearchParams();
+                    params.append("id", this.room_id);
+                    params.append("name", this.roomName);
+                    params.append("member1_id", this.member1_id);
+                    params.append("member2_id", this.member2_id);
+                    axios.post('/chat/room', {
+                        room_id: this.room_id,
+                        roomName: this.roomName,
+                        member1: { id: this.member1_id },
+                        member2: { id: this.member2_id }
+                    }).then(response => {
+                        // 채팅방 생성 성공
+                        var roomId = response.data.room_id;
+                        this.enterRoom(roomId, this.member1_id, this.member2_id);
+                    })
+                        .catch(response => { alert("회원을 찾을 수 없습니다."); });
+                }
+            }, 
+            enterRoom: function(room_id, member1_id, member2_id) {
+                var sender = memberId;
+                var receiver = this.member1_id === member1_id ? member2_id : member1_id; // receiver 값을 저장
+                if (sender !== null && sender.trim() !== "") {
+                    localStorage.setItem('wschat.sender', sender);
+                    localStorage.setItem('wschat.roomId', room_id);
+                    localStorage.setItem('wschat.member1Id', member1_id);
+                    localStorage.setItem('wschat.member2Id', member2_id);
+                    localStorage.setItem('wschat.receiver', receiver); // receiver 값을 저장
+                    location.href = "/chat/room/enter/" + room_id;
+                }
+            }
+,
+
+            deleteRoom: function(room_id) {
+                axios.delete('/chat/room/' + room_id)
+                    .then(response => {
+                        alert("채팅방을 삭제하였습니다.");
+                        this.findAllRoom();
+                    })
+                    .catch(error => {
+                        alert("채팅방 삭제에 실패하였습니다.");
+                    });
+            },
+            
+            isMemberInRoom: function(room) { 
+                const memberId = /*[[${#authentication.principal.username}]]*/ '';
+                return room.member1_id === memberId || room.member2_id === memberId;
+            },
+            
+            // 채팅목록에서 채팅방 이름
+            isMemberInRoomName1: function(room) {
+                const memberId = /*[[${#authentication.principal.username}]]*/ '';
+                return room.member1_id !== memberId;
+            },
+            isMemberInRoomName2: function(room) {
+                const memberId = /*[[${#authentication.principal.username}]]*/ '';
+                return room.member2_id !== memberId;
+            },
+            
+            // 날짜/시간 형식 변환 함수
+            getFormattedDateTime: function(dateString) {
+                const today = new Date();
+                const messageDate = new Date(dateString);
+                
+                if (
+                    today.getDate() === messageDate.getDate() &&
+                    today.getMonth() === messageDate.getMonth() &&
+                    today.getFullYear() === messageDate.getFullYear()
+                ) {
+                    // 날짜가 오늘일 경우 시간만 표시
+                    return messageDate.toLocaleString('ko-KR', { hour: 'numeric', minute: 'numeric' });
+                } else {
+                    // 날짜가 오늘이 아닐 경우 날짜만 표시
+                    return messageDate.toLocaleString('ko-KR', { year: 'numeric', month: 'numeric', day: 'numeric' });
+                }
+            }
+
+
+        }
+    });
+</script>
+
+	   <!-- footer -->
+    <div class="footer" style="margin-top: auto;">
+        <div class="container" align="left">
+            <div class="row">
+                <div class="col-md-4 footer-section">
+                    <a href="#" class="footer-logo">GYM_PT</a>
+                    <p class="dimmed-text">Growth Your Momentum-PT</p>
+                    <div class="social-icons">
+                        <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 footer-section">
+                    <h4>About Us</h4>
+                    <div class="dimmed-text">
+                        <div class="contact-info">대표이사: 김연수 | 사업자등록 번호: 809-81-01574</div>
+                        <div class="contact-info">영업 시간: 평일 9:00-18:00</div>
+                        <div class="contact-info">회사 신념: "Growth Your Momentum-PT"</div>
+                        <div class="contact-info">수상: "2023년 최고의 피트니스 웹사이트"로 선정</div>
+                    </div>
+                </div>
+                <div class="col-md-4 footer-section">
+                    <h4>Contact Us</h4>
+                    <div class="dimmed-text">
+                        <div>주소: 서울시 송파구 가락동</div>
+                        <div>전화: 1588-3819 (평일 9:00-18:00)</div>
+                        <div>결제도용신고: 1588-3816</div>
+                        <div>이메일: help@gympt.com</div>
+                        <div>고객센터 이용안내: 고객님의 소중한 의견을 기다립니다.</div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="text-center">&copy; 2023 GYM_PT. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+   <!-- footer -->
+</body>
+</html>

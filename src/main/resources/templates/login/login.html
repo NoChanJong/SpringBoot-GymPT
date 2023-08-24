@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GYM-PT</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script
+   src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<link rel="stylesheet"
+   href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+   integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+   crossorigin="anonymous">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+	crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css"
+   href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css" />
+<link rel="stylesheet"
+   href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script
+   src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<link rel="stylesheet"
+   href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+   integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+   crossorigin="anonymous">
+<link
+   href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+   rel="stylesheet"
+   integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+   crossorigin="anonymous">
+<link rel="stylesheet" type="text/css"
+   href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css" />
+<link rel="stylesheet"
+   href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link th:href="@{/css/atag.css}" rel="stylesheet"> <!-- a태그관련 스타일 -->
+    <link th:href="@{/css/navbar.css}" rel="stylesheet"> <!-- navbar 스타일 -->
+    <link th:href="@{/css/footer.css}" rel="stylesheet"> <!-- footer 스타일 -->
+  <style>
+
+
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Tamma+2&display=swap');
+
+@media (max-width: 500px) {
+  .form-container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    padding: 20px;
+  }
+
+  .form-right {
+    display: none;
+  }
+
+  .button-container {
+    display: flex; /* Change flex-direction back to row */
+    gap: 15px; /* Add gap between the buttons */
+    width: 100%;
+    align-items: center; /* Center the buttons horizontally */
+    justify-content: center; /* Center the buttons horizontally */
+  }
+
+  .form-submit-btn {
+    width: 48%; /* Adjust the width of the buttons to fit in a single row */
+    font-size: 14px;
+    margin-top: 0; /* Remove the margin-top */
+  }
+}
+
+
+h5 {
+    font-family: 'Baloo Tamma 2', cursive;
+    font-size: 3rem;
+    border-radius: 50px;
+    padding: 20px;
+    display: inline-block;
+    font-weight: bold;
+    color: rgb(27, 27, 27);
+}
+
+.form-container {
+    display: flex;
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 10px;
+    padding: 0;
+    box-shadow: 10px 10px 10px rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+    overflow: hidden;
+    width: 75%;
+    margin: 0 auto; /* 추가 */
+    margin-bottom: 10%; /* 이 부분 추가 */
+}
+
+.form-container .form-left {
+    flex: 1;
+    background-color: #f9f9f9;
+    padding: 80px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-container .form-right {
+    flex: 1;
+    padding-left: 40px;
+    background-color: #d6cdde;
+    padding: 80px;
+}
+
+.form-container h2 {
+    color: #333333;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-container .form-group {
+    margin-bottom: 20px;
+}
+
+.form-container .form-group label {
+    color: #333333;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.form-container .form-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #dddddd;
+    background-color: #f9f9f9;
+    color: #333333;
+}
+
+.form-container .form-submit-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: none;
+    background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+    background-size: 300%;
+    border-radius: 30px;
+    z-index: 1;
+    text-decoration: none;
+    position: relative;
+    border: none;
+    font-size: 14px;
+    font-family: inherit;
+    color: #fff;
+    width: 7em;
+    height: 3em;
+    line-height: 3em;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-container .form-submit-btn:hover {
+    animation: ani 8s linear infinite;
+    border: none;
+}
+
+@keyframes ani {
+    0% {
+        background-position: 0%;
+    }
+    100% {
+        background-position: 400%;
+    }
+}
+
+.form-container .form-submit-btn:before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    z-index: -1;
+    background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+    background-size: 400%;
+    border-radius: 35px;
+    transition: 1s;
+}
+
+.form-container .form-submit-btn:hover::before {
+    filter: blur(20px);
+}
+
+.form-container .form-submit-btn:active {
+    background: linear-gradient(32deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+}
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button-container button,
+.button-container a {
+    flex: 1;
+    margin: 0 10px; /* Increase the margin between the buttons */
+}
+
+.notification {
+    display: none;
+    position: absolute;
+    top: 20%;
+    left: 25%;
+    transform: translateX(-50%);
+    background-color: #f44336;
+    color: #fff;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    z-index: 9999;
+}
+
+.notification-content {
+    display: block;
+}
+
+  </style>
+
+
+</head>
+<body style="background-color: #212529;">
+
+  <div class="form-container mt-5">
+    <div class="form-left">
+      <h2>로그인</h2>
+      <form th:action="@{/login}" method="post">
+       <div class="notification" id="loginErrorNotification">
+        <span class="notification-content"></span>
+    </div>
+        <div class="form-group">
+          <label for="id">아이디</label>
+          <input type="text" id="id" name="id" placeholder="아이디를 입력하세요">
+        </div>
+        <div class="form-group">
+          <label for="password">비밀번호</label>
+          <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요">
+        </div>
+         <div class="button-container">
+  <button class="form-submit-btn" type="submit">로그인</button>
+  <a button th:href="@{/insertMember}" class="form-submit-btn" type="button">회원가입</button></a>
+</div> 
+
+      </form>
+    </div>
+   <div class="form-right">
+  <img src="/images/mainlogo.png" alt="logo">
+</div>
+
+  </div>
+    <!-- footer -->
+    <div class="footer" style="margin-top: auto;">
+        <div class="container" align="left">
+            <div class="row">
+                <div class="col-md-4 footer-section">
+                    <a href="#" class="footer-logo">GYM_PT</a>
+                    <p class="dimmed-text">Growth Your Momentum-PT</p>
+                    <div class="social-icons">
+                        <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 footer-section">
+                    <h4>About Us</h4>
+                    <div class="dimmed-text">
+                        <div class="contact-info">대표이사: 김연수 | 사업자등록 번호: 809-81-01574</div>
+                        <div class="contact-info">영업 시간: 평일 9:00-18:00</div>
+                        <div class="contact-info">회사 신념: "Growth Your Momentum-PT"</div>
+                        <div class="contact-info">수상: "2023년 최고의 피트니스 웹사이트"로 선정</div>
+                    </div>
+                </div>
+                <div class="col-md-4 footer-section">
+                    <h4>Contact Us</h4>
+                    <div class="dimmed-text">
+                        <div>주소: 서울시 송파구 가락동</div>
+                        <div>전화: 1588-3819 (평일 9:00-18:00)</div>
+                        <div>결제도용신고: 1588-3816</div>
+                        <div>이메일: help@gympt.com</div>
+                        <div>고객센터 이용안내: 고객님의 소중한 의견을 기다립니다.</div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="text-center">&copy; 2023 GYM_PT. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+   <!-- footer -->
+   <script>
+    // URL에서 파라미터를 확인하여 로그인 실패인 경우 알림창 띄우기
+    const urlParams = new URLSearchParams(window.location.search);
+    const errorParam = urlParams.get('error');
+    if (errorParam !== null) {
+        const loginErrorNotification = document.getElementById('loginErrorNotification');
+        loginErrorNotification.style.display = 'block';
+        loginErrorNotification.querySelector('.notification-content').textContent = '로그인 실패하였습니다. 아이디 비밀번호를 확인해주세요.';
+
+        // 3초 후에 말풍선 숨기기
+        setTimeout(function() {
+            loginErrorNotification.style.display = 'none';
+        }, 3000);
+    }
+</script>
+</body>
+</html>

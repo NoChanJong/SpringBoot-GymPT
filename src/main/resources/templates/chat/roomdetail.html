@@ -1,0 +1,294 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+	<title>GYM-PT</title>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>	
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" 
+		integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" 
+		crossorigin="anonymous">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+	<link th:href="@{/css/atag.css}" rel="stylesheet"> <!-- a태그관련 스타일 -->
+	<link th:href="@{/css/btnprimary.css}" rel="stylesheet"> <!-- btn 스타일 -->
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+
+        .list-group-item {
+            border: none; /* 선 제거 */
+        }
+            .message-bubble {
+        background-color: #FFD700;
+        border-radius: 10px;
+        display: inline-block;
+        padding: 5px 10px;
+        width: fit-content;
+        float: right;
+        position: relative;
+    }
+    
+        .message-bubble-left {
+        background-color: white;
+        border-radius: 10px;
+        display: inline-block;
+        padding: 5px 10px;
+        width: fit-content;
+        float: left;
+        position: relative;
+        margin-bottom: 10px;
+    }
+    
+    body{
+            background-color: #212529;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+    }
+    
+#app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column-reverse;
+  overflow-y: auto;
+  scrollbar-width: none; /* Hide the scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hide the scrollbar for IE and Edge */
+}
+
+#app::-webkit-scrollbar {
+  display: none; /* Hide the scrollbar for Chrome, Safari, and Opera */
+}
+
+
+
+
+    </style>
+</head>
+<body><div class="container mt-3 pt-5" id="app" v-cloak>
+		<nav class="navbar fixed-top" v-for="message in messages.slice().reverse()" style="background-color:#2c2f36;">
+		  <div class="container">
+		    <a class="navbar-brand" href="javascript:history.go(-1)"><i class="fas fa-chevron-left"></i></a>
+
+				<template v-if="message.sender === room.member1.id">
+					<!-- 메시지 보낸 사람이 member1인 경우 -->
+					<a v-if="message.sender !== sender"
+						class="navbar-brand d-flex align-items-center"
+						:href="'/getMember?id=' + room.member1.id" id="home"> <img
+						:src="'/image/' + room.member1.profile" alt="사진"
+						style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+						<span style=" color:white;">{{ room.member1.nickname }}</span>
+					</a> <a v-else class="navbar-brand d-flex align-items-center"
+						:href="'/getMember?id=' + room.member2.id" id="home"> <img
+						:src="'/image/' + room.member2.profile" alt="사진"
+						style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+						<span style=" color:white;">{{ room.member2.nickname }}</span>
+					</a>
+				</template>
+
+				<template v-else>
+					<!-- 메시지 보낸 사람이 member2인 경우 -->
+					<a v-if="message.sender !== sender"
+						class="navbar-brand d-flex align-items-center"
+						:href="'/getMember?id=' + room.member2.id" id="home"> <img
+						:src="'/image/' + room.member2.profile" alt="사진"
+						style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+						<span style=" color:white;">{{ room.member2.nickname }}</span>
+					</a> <a v-else class="navbar-brand d-flex align-items-center"
+						:href="'/getMember?id=' + room.member1.id" id="home"> <img
+						:src="'/image/' + room.member1.profile" alt="사진"
+						style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+						<span style=" color:white;">{{ room.member1.nickname }}</span>
+					</a>
+				</template>
+
+				<ul class="navbar-nav ms-auto mb-lg-0">
+		      <li class="nav-item mx-3">
+		      </li>
+		    </ul>
+		  </div>
+		</nav>
+		<ul class="list-group mb-5 pb-5" id="chat">
+		  <li class="list-group-item" v-for="message in messages.slice().reverse()" style="background-color: #212529;">
+		    <template v-if="message.sender === sender">
+		      <div class="text-end message-bubble" style="margin-left: 5px;">{{ message.message }}</div>
+		      <div class="text-end mt-2">        
+			      <span v-if="message.createDate_c" style="font-size: 8px; color: lightgray;">
+			          {{ getTime(message.createDate_c) }}
+			      </span>
+		      </div>
+		    </template>
+<!-- 		    <template v-else-if="message.type === 'ENTER'">
+		      <div class="text-start" style="background-color: rgba(0, 0, 0, 0.1); border-radius: 10px; text-align: center; display: flex; justify-content: center; align-items: center;">
+		        <i class="fas fa-bell" style="color: yellow;"></i>&nbsp;&nbsp; {{ message.message }}
+		      </div>
+		    </template> -->
+		    <template v-else>
+		      <div class="text-start message-bubble-left" :class="{ 'message-read': isMessageRead(message) }" style="margin-right: 5px;">{{ message.message }}</div>
+		      
+		      <div class="text-start mt-2" :class="{ 'message-read': isMessageRead(message) }" >        
+			      <span v-if="message.createDate_c" style="font-size: 8px; color: lightgray;">
+			          {{ getTime(message.createDate_c) }}
+			      </span>
+		      </div>
+		    </template>
+		  </li>
+		</ul>
+
+
+        <footer>
+            <nav class="navbar navbar-expand-lg fixed-bottom" style="background-color:#2c2f36;">
+				<div class="input-group">
+				    <input type="text" class="form-control" v-model="message" v-on:keypress.enter="sendMessageIfNotEmpty" placeholder="Send a message.">
+				    <button class="btn" :class="{'btn-danger': !message.trim(), 'btn-success': message.trim()}" type="button" @click="sendMessage" :disabled="!message.trim()">전송</button>
+				</div>
+            </nav>
+        </footer>
+    </div>
+<!-- JavaScript -->
+<script src="/webjars/vue/2.5.16/dist/vue.min.js"></script>
+<script src="/webjars/axios/0.17.1/dist/axios.min.js"></script>
+<script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
+<script src="/webjars/stomp-websocket/2.3.3-1/stomp.min.js"></script>
+<script>
+    // alert(document.title);
+    // websocket & stomp initialize
+    var sock = new SockJS("/ws/chat");
+    var ws = Stomp.over(sock);
+    var reconnect = 0;
+    // vue.js
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            roomId: '',
+            room: {},
+            sender: '',
+            message: '',
+            messages: [] // 이전에 쓴 메시지를 저장할 배열
+        },
+        created() {
+            this.roomId = localStorage.getItem('wschat.roomId');
+            this.sender = localStorage.getItem('wschat.sender');
+            this.receiver = localStorage.getItem('wschat.receiver'); // receiver 값을 저장
+            this.findRoom();
+            this.loadMessages(); // 페이지 로드 시 저장된 메시지를 불러옴
+        },
+        methods: {
+            findRoom: function() {
+                axios.get('/chat/room/' + this.roomId).then(response => {
+                    this.room = response.data;
+                    // 채팅방 정보에서 member1_profile과 member2_profile을 가져올 수 있습니다.
+                    var member1_profile = this.room.member1.profile;
+                    var member2_profile = this.room.member2.profile;
+
+                    var member1_nickname = this.room.member1.nickname;
+                    var member2_nickname = this.room.member2.nickname;
+                    
+                    var member1_id = this.room.member1.id;
+                    var member2_id = this.room.member2.id;
+                    // 이제 member1_profile과 member2_profile을 사용하여 원하는 방식으로 활용할 수 있습니다.
+                });
+            },
+            sendMessage: function() {
+                ws.send("/app/chat/message", {}, JSON.stringify({ type: 'TALK', roomId: this.roomId, sender: this.sender, message: this.message, receiver: this.receiver }));
+                this.message = '';
+            },
+            recvMessage: function(recv) {
+/*                 // 읽음 상태 업데이트
+                if (recv.sender !== this.sender) {
+                    if (recv.sender === this.room.member1_id && this.receiver !== this.room.member1_id) {
+                        recv.member1Read = false;
+                    } else if (recv.sender === this.room.member2_id && this.receiver !== this.room.member2_id) {
+                        recv.member2Read = false;
+                    }
+                }
+
+                // 수신자의 채팅방 입장 여부에 따라 읽음 상태 업데이트
+                if (this.receiver === recv.sender && this.sender !== recv.sender) {
+                    if (recv.sender === this.room.member1_id || recv.sender === this.room.member2_id) {
+                        // 채팅방에 들어간 경우에만 읽음 상태를 true로 설정
+                        if (this.sender === this.room.member1_id) {
+                            recv.member1Read = true;
+                        } else if (this.sender === this.room.member2_id) {
+                            recv.member2Read = true;
+                        }
+                    }
+                } */
+
+                this.messages.unshift({
+                    "type": recv.type,
+                    "sender": recv.type === 'ENTER' ? '[알림]' : recv.sender,
+                    "receiver": recv.receiver,       
+                    "message": recv.message,
+                    "messageId": recv.messageId,
+                    "createDate_c": recv.createDate_c,
+                    "member1Read": recv.member1Read,
+                    "member2Read": recv.member2Read
+                });
+            },
+            loadMessages: function() {
+                axios.get('/chat/messages', { params: { roomId: this.roomId } })
+                    .then(response => {
+                        this.messages = response.data; // 가져온 메시지를 this.messages 배열에 저장
+                        this.messages.forEach(message => {
+                                message.member1Read = true;
+                                message.member2Read = true;
+                          });
+                    })
+                    .catch(error => {
+                        console.error('Failed to load messages:', error);
+                    });
+            },
+            isMessageRead: function(message) {
+                if (this.sender === this.room.member1_id) {
+                    return message.member1Read;
+                } else if (this.sender === this.room.member2_id) {
+                    return message.member2Read;
+                }
+                if (this.receiver === this.room.member1_id) {
+                    return message.member1Read;
+                } else if (this.receiver === this.room.member2_id) {
+                    return message.member2Read;
+                }
+                return false;
+            },
+            getTime: function(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            },
+            sendMessageIfNotEmpty() {
+                if (this.message.trim()) {
+                  this.sendMessage();
+                }
+              }
+        }
+    });
+
+    function connect() {
+        // pub/sub event
+        ws.connect({}, function(frame) {
+            ws.subscribe("/topic/chat/room/" + vm.$data.roomId, function(message) {
+                var recv = JSON.parse(message.body);
+                vm.recvMessage(recv);
+            });
+            ws.send("/app/chat/message", {}, JSON.stringify({ type: 'ENTER', roomId: vm.$data.roomId, sender: vm.$data.sender }));
+        }, function(error) {
+            if (reconnect++ <= 5) {
+                setTimeout(function() {
+                    console.log("connection reconnect");
+                    sock = new SockJS("/ws/chat");
+                    ws = Stomp.over(sock);
+                    connect();
+                }, 10 * 1000);
+            }
+        });
+    }
+
+    connect();
+</script>
+
+
+</body>
+</html>

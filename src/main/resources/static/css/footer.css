@@ -1,0 +1,86 @@
+@charset "UTF-8";
+
+.footer {
+	padding: 30px 0;
+	color: #f8f9fa;
+	background-color: #343a40;
+	margin-top: auto;
+	text-align: center;
+	font-size: 12px;
+	margin-top: 30px;
+}
+
+.footer .footer-logo {
+	font-size: 1.3em;
+	font-weight: bold;
+	color: #f8f9fa;
+	text-decoration: none;
+	transition: color 0.3s ease;
+}
+
+.footer .footer-logo:hover {
+	color: #adb5bd;
+}
+
+.footer .footer-section {
+	margin-bottom: 20px;
+}
+
+.footer h4 {
+	font-size: 1em;
+	color: #ffc107; /* Yellow color for the titles */
+	font-weight: bold;
+}
+
+.social-icons a {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #343a40;
+	color: #f8f9fa;
+	border: 1px solid #f8f9fa;
+	border-radius: 50%;
+	padding: 5px;
+	margin-right: 5px;
+	transition: color 0.3s ease;
+	text-align: center;
+	height: 30px;
+	width: 30px;
+}
+
+/* Social media brand colors */
+.social-icons a.facebook:hover {
+	color: #3b5998;
+}
+
+.social-icons a.twitter:hover {
+	color: #1da1f2;
+}
+
+.social-icons a.instagram:hover {
+	color: #C13584;
+}
+
+.social-icons a.linkedin:hover {
+	color: #0e76a8;
+}
+
+.footer .footer-section div a {
+	color: #f8f9fa;
+	text-decoration: none;
+	transition: color 0.3s ease;
+}
+
+.footer .footer-section div a:hover {
+	color: #adb5bd;
+}
+
+/* New styles for contact info */
+.footer .contact-info i {
+	margin-right: 5px;
+}
+
+/* Dimmed text color */
+.dimmed-text {
+	color: #bdc3c7; /* or any other color you prefer */
+}

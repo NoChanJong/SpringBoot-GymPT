@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+   <title>Spring Framework</title>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">   
+   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" 
+      integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" 
+      crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" 
+      rel="stylesheet" 
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" 
+      crossorigin="anonymous">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" 
+      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" 
+      crossorigin="anonymous"></script>   
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" 
+      integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" 
+      crossorigin="anonymous" 
+      referrerpolicy="no-referrer"></script>
+      <link th:href="@{/css/atag.css}" rel="stylesheet">
+<!-- a태그관련 스타일 -->
+<link th:href="@{/css/btnprimary.css}" rel="stylesheet">
+<!-- btn 스타일 -->
+<link th:href="@{/css/navbar.css}" rel="stylesheet">
+<!-- navbar 스타일 -->
+<link th:href="@{/css/footer.css}" rel="stylesheet">
+<link th:href="@{/css/pagination.css}" rel="stylesheet">
+<!-- footer 스타일 -->
+      
+</head>
+<style>
+      .hidden {
+         display: none;
+      }
+
+      body {
+         background-color: #212529;
+         color: #fff;
+         font-size: 15px;
+      }
+
+      h1 {
+         text-align: center;
+         margin: 20px 0;
+      }
+
+      .orderInfo {
+         max-width: 900px;
+         margin: 0 auto;
+         text-align: right;
+
+         background-color: transparent; /* 배경을 투명하게 설정 */
+      }
+      
+      .orderInfo .s_info {
+   display: flex;
+   justify-content: flex-end;
+   align-items: center;
+   text-align: right;
+   font-size: 20px
+}
+
+      ul {
+         list-style-type: none;
+         padding: 0;
+      }
+
+      li {
+         margin-bottom: 20px;
+         padding: 10px;
+         background-color: transparent; /* 배경을 투명하게 설정 */
+      }
+
+      .s_upload_thumb img {
+         width: 10%;
+         height: 10%;
+         display: block;
+         margin-bottom: 10px;
+         float: left;
+         margin-right: 10px;
+      }
+
+      .s_info {
+         float: left;
+         width: calc(90% - 10px);
+      }
+
+      .s_info .s_name a {
+         font-weight: bold;
+         text-decoration: none;
+          font-size: 25px;
+      color: #fff;
+      }
+
+ 
+   .s_info .s_price {
+      display: inline;
+   }
+         .s_info .s_price,
+      .s_info .s_amount,
+      .s_info .total_price,
+      .s_info .original_amount,
+      .s_info .memberPoint,
+      .s_info .changePoint {
+        display: inline;
+        
+      }
+      
+
+   .orderInfo .inputArea {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      text-align: right;
+   }
+
+
+/*총합계라는 글씨*/
+   .orderInfo .inputArea label  {
+      margin-right: 10px;
+      font-size: 25px;
+   }
+      /*총 합계*/
+        .inputArea .total_price {
+    font-size: 40px; /* 원하는 글씨 크기로 조정하세요 */
+    color: orange;
+  }
+  
+/*포인트 가격 글씨 사이즈*/
+   .orderInfo .memberPoint,
+   .orderInfo .changePoint {
+      
+      font-size: 20px;
+   }
+
+      label {
+         display: block;
+         
+         margin-top:5px;
+         font-weight: bold;
+      }
+
+      .btn-primary {
+         background-color: #007bff;
+         border-color: #007bff;
+      }
+
+      .btn-primary:hover {
+         background-color: #0069d9;
+         border-color: #0062cc;
+      }
+
+      .mt-3 {
+         margin-top: 10px;
+      }
+
+      .me-2 {
+         margin-right: 10px;
+      }
+      
+      .parent-container {
+  display: flex;
+  justify-content: flex-end;
+}
+.input-group.mb-3 {
+   max-width: 250px; /* 원하는 칸의 너비로 조정하세요 */
+   margin: 0 auto;
+}
+
+/* 시작 */
+
+
+   .inputArea {
+      margin-bottom: 10px;
+   }
+
+.inputArea input[type="text"] {
+    border: none;
+    border-bottom: 1px solid #fff; /* 텍스트 입력 영역의 하단 테두리 스타일 */
+    background-color: transparent; /* 텍스트 입력 영역의 배경색 투명하게 설정 */
+    color: #fff; /* 텍스트 입력 영역의 글자 색상 */
+    width: 100%;
+    padding: 5px 0;
+    font-size: 14px;
+    outline: none; /* 포커스된 상태일 때 테두리 제거 */
+    width: 300px; /* 원하는 너비로 조정하세요 */
+}
+
+
+   .inputArea input[type="text"]::placeholder {
+      color: #fff; /* 텍스트 입력 영역의 placeholder 글자 색상 */
+   }
+
+   .inputArea input[type="text"]:focus {
+      border-bottom: 1px solid #E24C4B; /* 텍스트 입력 영역에 포커스되었을 때의 테두리 스타일 */
+}
+
+   
+/*밑에 주문 버튼*/
+ .btn-success {
+   background-color: #343a40;
+   color: #fff;
+   border: none;
+}
+
+.btn-success:hover {
+   background-color: gray;
+}
+.btn-primary {
+   background-color: #343a40;
+   color: #fff;
+   border: none;
+}
+
+.btn-primary:hover {
+   background-color: gray;
+}
+
+   /* 우편번호 클릭버튼 스타일링 */
+   .custom-button {
+      background-color: #E24C4B;
+      color: #fff;
+      border: none;
+      font-size: 14px;
+      border-radius: 5px;
+      cursor: pointer;
+   }
+
+   .custom-button:hover {
+      background-color: #FF6B6A;
+   }
+ 
+ 
+  #wrap {
+    position: fixed; /* 스크롤에 영향을 받지 않고 화면 상단에 고정 */
+    top: 50%; /* 화면 상단 기준으로 세로 중앙 정렬 */
+    left: 60%; /* 화면 좌측 기준으로 가로 중앙 정렬 */
+    transform: translate(-50%, -50%); /* 가로, 세로 방향으로 모두 중앙 정렬 */
+    z-index: 1000; /* 다른 요소들보다 위에 배치되도록 z-index 설정 */
+    /* 기타 원하는 스타일 추가 */
+  }
+ 
+ 
+hr {
+  position: relative;
+  border: none;
+  height: 1px;
+  background-color: #212529;
+}
+
+hr::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 1px;
+  background-color: #fff; /* 배경 색상에 맞춰서 설정하세요 */
+}
+
+
+ 
+   </style>
+</head>
+<body>
+
+<div class="container mt-5 pt-5" align="center">
+<h1>주문 하기</h1>
+<div class="orderInfo">
+    <form th:action="@{/placeOrder}" method="post" autocomplete="off">
+     <input type="hidden" name="memberId" class="form-control" th:value="${session.member.id}"> 
+<ul>
+   <li th:each="cart : ${list}" style="display: flex; align-items: center;">
+      <div class="s_upload_thumb" th:if="${not #strings.isEmpty(cart.sUploadThumb)}">
+         <div th:each="upload : ${#strings.arraySplit(cart.sUploadThumb, ',')}">
+            <img th:src="@{'/upload/' + ${upload}}" alt="사진" style="width: 60%; height: 60%;" />
+         </div>
+      </div>
+      <div class="s_info" style="margin-left: 20px;">
+         <input name="s_seq" type="hidden" th:value="${cart.sSeq}">
+         <div class="s_name">
+            <a th:href="@{/shop/shopBoardView(sSeq=${cart.sSeq})}" th:text="${cart.sName}"></a>
+            <br>
+            <span>가격</span>
+            <div class="s_price" th:text="${#numbers.formatInteger(cart.sPrice, 3, 'COMMA') + '원'}"></div><br>
+           <!--  <span>수량</span> -->
+            <div class="s_amount" th:text="${cart.sAmount}+'개'"></div><br>
+            <span>합계</span>
+            <span class="total_price" th:text="${#numbers.formatInteger(cart.sPrice * cart.sAmount, 3, 'COMMA') + '원'}"></span><br />
+            
+         <div>
+            <label th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}" for="original_amount" style="font-size: 14px;">현재고</label> <!-- 숨길 예정 -->
+               <span th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}" class="original_amount" th:text="${#vars['product_' + cart.sSeq].sAmount}"></span><br />
+         </div>
+            <div class="inputArea">
+             <label th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}" for="changeSAmount" style="font-size: 14px;">결제 후 남은 재고</label> <!-- 숨길 예정 -->
+             <input type="hidden" name="s_amount" id="s_amount" required="required" th:value="${#vars['product_' + cart.sSeq].sAmount - cart.sAmount}" readonly />
+         </div>
+
+        
+
+         </div>
+      </div>
+   </li>
+</ul>
+<hr>
+   <div class="inputArea">
+     <label for="total_price">총합계</label>
+     <input type="text" name="total_price" class="form-control hidden" id="total_price" th:value="${totalPrice}" required="required" readonly/>
+     <span class="total_price" th:text="${#numbers.formatInteger(totalPrice, 3, 'COMMA') + '원'}"></span>
+   </div>
+      <span>현재 내 포인트 </span>
+      <span class="memberPoint" id="memberPoint" th:text="${member.point == 0 ? '0' + '원': #numbers.formatInteger(member.point, 3, 'COMMA') + '원'}"></span><br />
+      <span>결제 후 남은 포인트 </span>
+      <span class="changePoint" th:text="${#numbers.formatInteger(member.point - totalPrice, 3, 'COMMA') + '원'}"></span><br />
+<br />
+<hr>
+     <div class="inputArea">
+        
+       <input class= "hidden" type="text" name="point" id="point" required="required" th:value="${member.point-totalPrice}" readonly />
+     </div>
+     
+
+     
+     <div class="inputArea">
+    <input type="text" name="order_rec"  id="order_rec" required placeholder="수령인을 입력해주세요">
+</div>
+
+<div class="inputArea">
+    <input type="text" name="phone_num" id="phone_num" required="required"  placeholder="연락처를 입력해주세요">
+</div>
+<br>
+<div class="inputArea">
+    <p>
+        <input type="text" name="user_addr1" id="sample3_postcode" required placeholder="우편번호"><br>
+      <button type="button" class="custom-button" onclick="sample3_execDaumPostcode()">우편번호 찾기</button><br>
+    </p>
+</div>
+<div class="inputArea">
+    <p>
+        <input type="text" name="user_addr2" id="sample3_address" required placeholder="주소"><br>
+        <input type="text" name="user_addr3" id="sample3_detailAddress" required placeholder="상세주소"><br>
+        <input type="text" id="sample3_extraAddress" required placeholder="참고항목"><br>
+    </p>
+</div>
+
+
+
+      <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
+      <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
+      </div>
+      
+      <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+      <script>
+          // 우편번호 찾기 찾기 화면을 넣을 elementㅌ   
+          var element_wrap = document.getElementById('wrap');
+      
+          function foldDaumPostcode() {
+              // iframe을 넣은 element를 안보이게 한다.
+              element_wrap.style.display = 'none';
+          }
+      
+          function sample3_execDaumPostcode() {
+              // 현재 scroll 위치를 저장해놓는다.
+              var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
+              new daum.Postcode({
+                  oncomplete: function(data) {
+                      // 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+      
+                      // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                      // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                      var addr = ''; // 주소 변수
+                      var extraAddr = ''; // 참고항목 변수
+      
+                      //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                      if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                          addr = data.roadAddress;
+                      } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                          addr = data.jibunAddress;
+                      }
+      
+                      // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+                      if(data.userSelectedType === 'R'){
+                          // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                          // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                          if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                              extraAddr += data.bname;
+                          }
+                          // 건물명이 있고, 공동주택일 경우 추가한다.
+                          if(data.buildingName !== '' && data.apartment === 'Y'){
+                              extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                          }
+                          // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                          if(extraAddr !== ''){
+                              extraAddr = ' (' + extraAddr + ')';
+                          }
+                          // 조합된 참고항목을 해당 필드에 넣는다.
+                          document.getElementById("sample3_extraAddress").value = extraAddr;
+                      
+                      } else {
+                          document.getElementById("sample3_extraAddress").value = '';
+                      }
+      
+                      // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                      document.getElementById('sample3_postcode').value = data.zonecode;
+                      document.getElementById("sample3_address").value = addr;
+                      // 커서를 상세주소 필드로 이동한다.
+                      document.getElementById("sample3_detailAddress").focus();
+      
+                      // iframe을 넣은 element를 안보이게 한다.
+                      // (autoClose:false 기능을 이용한다면, 아래 코드를 제거해야 화면에서 사라지지 않는다.)
+                      element_wrap.style.display = 'none';
+      
+                      // 우편번호 찾기 화면이 보이기 이전으로 scroll 위치를 되돌린다.
+                      document.body.scrollTop = currentScroll;
+                  },
+                  // 우편번호 찾기 화면 크기가 조정되었을때 실행할 코드를 작성하는 부분. iframe을 넣은 element의 높이값을 조정한다.
+                  onresize : function(size) {
+                      element_wrap.style.height = size.height+'px';
+                  },
+                  width : '100%',
+                  height : '100%'
+              }).embed(element_wrap);
+      
+              // iframe을 넣은 element를 보이게 한다.
+              element_wrap.style.display = 'block';
+          }
+      </script>
+   </div>
+   <div class="inputArea">
+    <button type="button" class="btn btn-primary mt-3 me-2 order_btn" onclick="validateAndSubmit()">주문</button>
+    <a th:href="@{/shopBoardList}" class="btn btn-primary mt-3 me-2 cancel_btn ">주문취소</a>
+       <script>
+function validateAndSubmit() {
+   var orderRecInput = document.getElementById('order_rec').value;
+    var phoneNumInput = document.getElementById('phone_num').value;
+    var userAddr1Input = document.getElementById('sample3_postcode').value;
+    var userAddr2Input = document.getElementById('sample3_address').value;
+    var userAddr3Input = document.getElementById('sample3_detailAddress').value;
+    
+    if (orderRecInput === '' || phoneNumInput === '' || userAddr1Input === '' || userAddr2Input === '' || userAddr3Input === '') {
+        alert('주문정보를 입력해주세요.');
+        return;
+    }
+   
+    var totalPriceInput = document.getElementById('total_price');
+    if (!totalPriceInput) {
+        alert('총합계 요소를 찾지 못했습니다.');
+        return;
+    }
+
+    var memberPointInput = document.getElementById('memberPoint');
+    if (!memberPointInput) {
+        alert('현재 내 포인트 요소를 찾지 못했습니다.');
+        return;
+    }
+
+    var totalPrice = parseFloat(totalPriceInput.value.replace(/[^0-9.]/g, ''));
+    var memberPoint = parseFloat(memberPointInput.innerText.replace(/[^0-9.]/g, ''));
+    var changePoint = parseFloat(document.getElementById('point').value.replace(/[^0-9.]/g, ''));
+
+    if (memberPoint < totalPrice) {
+        alert('포인트가 부족합니다.');
+    } else {
+        var confirmation = confirm('결제가 완료되었습니다.');
+        if (confirmation) {
+            document.querySelector('form').submit();
+        }
+    }
+}
+</script>
+
+
+    
+</div>
+</form>
+</div>
+   <!-- footer -->
+    <div class="footer" style="margin-top: auto;">
+        <div class="container" align="left">
+            <div class="row">
+                <div class="col-md-4 footer-section">
+                    <a href="#" class="footer-logo">GYM_PT</a>
+                    <p class="dimmed-text">Growth Your Momentum-PT</p>
+                    <div class="social-icons">
+                        <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 footer-section">
+                    <h4>About Us</h4>
+                    <div class="dimmed-text">
+                        <div class="contact-info">대표이사: 김연수 | 사업자등록 번호: 809-81-01574</div>
+                        <div class="contact-info">영업 시간: 평일 9:00-18:00</div>
+                        <div class="contact-info">회사 신념: "Growth Your Momentum-PT"</div>
+                        <div class="contact-info">수상: "2023년 최고의 피트니스 웹사이트"로 선정</div>
+                    </div>
+                </div>
+                <div class="col-md-4 footer-section">
+                    <h4>Contact Us</h4>
+                    <div class="dimmed-text">
+                        <div>주소: 서울시 송파구 가락동</div>
+                        <div>전화: 1588-3819 (평일 9:00-18:00)</div>
+                        <div>결제도용신고: 1588-3816</div>
+                        <div>이메일: help@gympt.com</div>
+                        <div>고객센터 이용안내: 고객님의 소중한 의견을 기다립니다.</div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="text-center">&copy; 2023 GYM_PT. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+   <!-- footer -->
+</body>
+</html>

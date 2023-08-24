@@ -1,0 +1,613 @@
+<head>
+<meta charset="UTF-8">
+<title>GYM-PT</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<script type="text/javascript"
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=82b39c4ae6c5a39bbb26fe676819e30d&libraries=services"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+	integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+	crossorigin="anonymous">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+	crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css" />
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+	integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+	crossorigin="anonymous">
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css" />
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link th:href="@{/css/atag.css}" rel="stylesheet">
+<!-- a태그관련 스타일 -->
+<link th:href="@{/css/navbar.css}" rel="stylesheet">
+<link th:href="@{/css/footer.css}" rel="stylesheet">
+<link th:href="@{/css/btnprimary.css}" rel="stylesheet">
+<!-- btn 스타일 -->
+<style>
+body {
+	background-color: #212529;
+	color: #fff;
+	font-size: 13px;
+}
+
+#mapContainer {
+	position: relative;
+	width: 70%;
+	height: 70vh;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 0;
+	margin-bottom: 150px;
+}
+
+#map {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	opacity: 1;
+	transition: opacity 0.5s;
+}
+
+#roadview {
+	width: 100%;
+	height: 63.5vh;
+	top: 129px;
+	position: absolute;
+	opacity: 1;
+	transition: opacity 0.5s;
+}
+
+.returnBtn {
+	display: none;
+	position: fixed;
+	top: 100px; /* 원하는 상단 간격 설정 */
+	right: 0px;
+	z-index: 1;
+	/* 버튼 스타일 */
+	background-color: #343a40; /* 버튼 배경색 */
+	color: #FFFFFF; /* 버튼 텍스트 색상 */
+	border: none; /* 테두리 없앰 */
+	border-radius: 5px; /* 둥근 테두리 */
+	font-size: 12px; /* 텍스트 크기 */
+	cursor: pointer;
+}
+
+.returnBtn:hover {
+	background-color: gray; /* 버튼에 마우스 호버 시 배경색 변경 */
+}
+
+.roadviewBtn {
+	background-color: #343a40; /* 버튼 배경색 */
+	color: #FFFFFF; /* 버튼 텍스트 색상 */
+	border: none; /* 테두리 없앰 */
+	border-radius: 5px; /* 둥근 테두리 */
+	font-size: 12px; /* 텍스트 크기 */
+	cursor: pointer;
+}
+
+.roadviewBtn:hover {
+	background-color: gray; /* 버튼에 마우스 호버 시 배경색 변경 */
+}
+
+.custom_typecontrol {
+	position: absolute;
+	top: 8%;
+	right: 0%;
+	overflow: hidden;
+	width: 130px;
+	height: 30px;
+	margin: 0;
+	padding: 0;
+	z-index: 1;
+	font-size: 12px;
+	font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+	display: flex;
+	align-items: center;
+	overflow: hidden;
+}
+
+.custom_typecontrol span {
+	display: block;
+	width: 65px;
+	height: 30px;
+	float: left;
+	text-align: center;
+	line-height: 30px;
+	cursor: pointer;
+	margin: 0;
+	padding: 0;
+}
+
+.custom_typecontrol .btn {
+	background: #fff;
+	background: linear-gradient(#fff, #e6e6e6);
+}
+
+.custom_typecontrol .btn:hover {
+	background: #f5f5f5;
+	background: linear-gradient(#f5f5f5, #e3e3e3);
+}
+
+.custom_typecontrol .btn:active {
+	background: #e6e6e6;
+	background: linear-gradient(#e6e6e6, #fff);
+}
+
+.custom_typecontrol .selected_btn {
+	color: #fff;
+	background: #425470;
+	background: linear-gradient(#425470, #5b6d8a);
+}
+
+.custom_typecontrol .selected_btn:hover {
+	color: #fff;
+}
+
+/* 모바일 */
+@media ( max-width : 745px) {
+	#map {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		opacity: 1;
+		transition: opacity 0.5s;
+		top: -10px;
+	}
+	#mapContainer {
+		padding-bottom: 5.5rem; /* 모바일 화면에서 mapContainer의 아래 여백을 5rem로 설정 */
+	}
+	#mapReturnBtn {
+		z-index: 3; /* mapReturnBtn이 가장 위에 표시됨 */
+	}
+	#roadview {
+		position: absolute;
+		top: 105px; /* 원하는 높이로 조정 */
+		left: 0;
+		width: 100%;
+		height: 70%;
+	}
+	.custom_typecontrol {
+		top: 97%; /* 오른쪽 아래로 버튼들이 위치하도록 설정 */
+	}
+}
+</style>
+</head>
+<body style="background-color: #212529; overflow-x: hidden;">
+	<nav
+		class="navbar navbar-expand-lg navbar-light bg-light justify-content-start fixed-top">
+		<a th:href="@{/index}" class="btn logo-icon-button"> <img
+			src="/logo/mainlogo2.png" alt="로고"
+			style="max-height: 15%; max-width: 15%;"> <span
+			style="font-size: 24px;">GYM_PT</span>
+		</a>
+
+		<button id="searchToggle" class="btn btn-primary pt-2" type="button">
+			<i class="fas fa-search"></i>
+		</button>
+
+		<!-- 로그인한 사용자에게만 보여질 내용 -->
+		<div th:if="${#authentication.principal != 'anonymousUser'}">
+			<button id="myToggle" class="btn profile-icon-button" type="button">
+				<img th:src="@{/image/} + ${#authentication.principal.profile}"
+					alt="Profile Picture"
+					style="width: 30px; height: 30px; border-radius: 50%;">
+			</button>
+		</div>
+		<!-- 로그인하지 않은 사용자에게 보여질 내용 -->
+		<div th:unless="${#authentication.principal != 'anonymousUser'}">
+			<a href="#"></a>
+		</div>
+
+
+		<a th:href="@{/chat/room}" class="btn chat-icon-button" type="button">
+			<i class="material-icons">send</i>
+		</a>
+
+		<div id="searchFormWrapper"
+			class="d-none d-flex align-items-center mx-auto">
+			<form action="selectMember" method="get" class="ms-0"
+				id="selectMemberForm">
+				<!-- 컴퓨터용 -->
+				<input type="hidden" id="curPage" name="curPage" th:value="0">
+				<input type="hidden" id="rowSizePerPage" name="rowSizePerPage"
+					th:value="${rp}">
+				<div class="row justify-content-center">
+					<div class="col-auto">
+						<div class="input-group">
+							<select class="form-select" id="searchType" name="searchType"
+								th:value="${st}" style="display: none;">
+								<option value="">검색</option>
+								<option value="both" th:selected="${st == 'both'}">아이디
+									또는 닉네임</option>
+							</select> <input class="form-control bg-dark text-light" name="searchWord"
+								type="text" placeholder="🍳유저 검색" />
+							<button class="btn btn-primary" type="submit">검색</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<div th:if="${#authentication.principal != 'anonymousUser'}"
+			id="myFormWrapper"
+			class="d-none d-flex mx-auto flex-column align-items-center">
+			<img th:src="@{/image/} + ${#authentication.principal.profile}"
+				alt="Profile Picture"
+				style="width: 80px; height: 80px; border-radius: 50%;">
+			<p th:text="${#authentication.principal.nickname}" class="m-0"></p>
+			<p th:text="${#authentication.principal.username}"
+				style="color: gray;" class="m-0"></p>
+			<a
+				th:href="@{/getMember(id=${#authentication.principal.username})}"
+				style="color: white;" class="m-0"><i class="fas fa-user"></i>
+				마이 페이지</a> <a href="logout" onclick="return confirm('로그아웃 하시겠습니까?')"
+				style="color: white;" class="m-0"><i class="fas fa-sign-out-alt"></i>
+				로그아웃</a>
+			<!-- 로그인 안되어있을떄  -->
+		</div>
+	</nav>
+
+	<div class="sidebar">
+		<ul>
+			<!-- 로그인하지 않은 상태일 때 로그인 및 회원가입 링크를 보여줍니다 -->
+			<li th:if="${#authentication.principal == 'anonymousUser'}"
+				class="login-signup"><a th:href="@{/login}">로그인</a> <a
+				th:href="@{/insertMember}">회원가입</a></li>
+
+			<!-- 로그인한 상태일 때 사용자 닉네임을 보여줍니다 -->
+			<li th:unless="${#authentication.principal == 'anonymousUser'}"><span
+				th:text="${#authentication.principal.nickname}"></span>님 접속중</li>
+
+			<li><hr></li>
+			<!-- New list item for horizontal rule -->
+			<li><a th:href="@{/index}"><i class="fas fa-home"></i> 홈</a></li>
+			<li><a th:href="@{/getCommunityList}"><i
+					class="fas fa-users"></i> 커뮤니티</a></li>
+			<li><a href="#" onclick="toggleSubMenu()"><i
+					class="fas fa-dumbbell"></i> 쇼핑몰</a>
+				<ul id="submenu" class="submenu">
+					<li><a th:href="@{/shopBoardList}"><i
+							class="fas fa-shopping-cart"></i> 쇼핑하기</a></li>
+					<li><a th:href="@{/cartList}"><i
+							class="fas fa-shopping-basket"></i> 장바구니</a></li>
+					<li><a th:href="@{/orderList}"><i class="fas fa-list-ul"></i>
+							주문목록</a></li>
+					<li><a th:href="@{/insertPoint}"><i class="fas fa-coins"></i>
+							포인트 충전</a></li>
+					<li><a th:href="@{/getBoardList}"><i
+							class="fas fa-headset"></i> 고객센터</a></li>
+				</ul></li>
+			<li><a th:href="@{/getNewsList}"><i class="fas fa-newspaper"></i>
+					뉴스</a></li>
+			<li><hr></li>
+			<!-- New list item for horizontal rule -->
+			<li><a th:href="@{#}" style="color: #289AFF;"><i
+					class="fas fa-map-marker-alt"></i> 내 주변 헬스장 찾기</a></li>
+			<li><a th:href="@{/selectMember}"><i class="fas fa-user"></i>
+					유저 검색</a></li>
+			<li><a th:href="@{/getLikedCommunities}"><i
+					class="fas fa-heart"></i> 좋아요 한 게시물</a></li>
+			<li><hr></li>
+			<!-- New list item for horizontal rule -->
+			<li><a th:href="@{/getInformlist}"><i
+					class="fas fa-volume-up"></i> 공지사항</a></li>
+			<li><a th:href="@{/getBoardList}"><i class="fas fa-headset"></i>
+					문의사항</a></li>
+
+			<li><hr></li>
+			<li
+				th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+				<a th:href="@{/adminpage}"> <i class="fas fa-user"></i> 관리자 페이지
+			</a>
+			</li>
+
+			<!-- New list item for horizontal rule -->
+		</ul>
+	</div>
+
+
+	<script>
+		function toggleSubMenu() {
+			var submenu = document.getElementById('submenu');
+			submenu.classList.toggle('active');
+		}
+	</script>
+
+	<div class="sidebar-toggle">
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+	</div>
+
+
+
+	<script>
+		$(document).ready(function() {
+			$('.sidebar-toggle').on('click', function() {
+				$('.sidebar').toggleClass('active');
+				$(this).toggleClass('active');
+			});
+
+			$('.product-container').slick({
+				slidesToShow : 3,
+				slidesToScroll : 1,
+				prevArrow : $('.carousel-control.left'),
+				nextArrow : $('.carousel-control.right'),
+				responsive : [ {
+					breakpoint : 768,
+					settings : {
+						slidesToShow : 1
+					}
+				} ]
+			});
+		});
+
+		$(document).ready(function() {
+			$("#searchToggle").on('click', function() {
+				$("#searchFormWrapper").toggleClass('d-none'); // 검색창을 보이거나 숨김
+			});
+		});
+
+		$(document).ready(function() {
+			$("#myToggle").on('click', function() {
+				$("#myFormWrapper").toggleClass('d-none'); // 검색창을 보이거나 숨김
+			});
+		});
+	</script>
+	<!-- nav -->
+
+	<div id="mapContainer" class="mt-5 pt-5">
+		<h1>GYM PT MAP</h1>
+		<hr />
+		<div id="map" style="position: relative; overflow: hidden;"></div>
+		<div id="roadview" style="position: absolute; bottom: 0; opacity: 0;"></div>
+
+		<div class="map_wrap"></div>
+
+		<!-- 지도타입 컨트롤 div 입니다 -->
+		<div class="custom_typecontrol radius_border">
+			<span id="btnRoadmap" class="selected_btn"
+				onclick="setMapType('roadmap')">지도</span> <span id="btnSkyview"
+				class="btn" onclick="setMapType('skyview')">스카이뷰</span>
+		</div>
+
+		<button id="mapReturnBtn" class="returnbtn" onclick="toggleMap(true)">지도로
+			돌아가기</button>
+	</div>
+
+	<!-- 로드뷰 -->
+
+	<script>
+		var mapContainer = document.getElementById('map');
+		var mapOptions = {
+			center : new kakao.maps.LatLng(37.5665, 126.9780), // 초기 위치를 서울로 지정
+			level : 3
+		// 초기 확대 배율을 3으로 설정
+		};
+
+		var map = new kakao.maps.Map(mapContainer, mapOptions);
+		var ps = new kakao.maps.services.Places();
+
+		// 지도타입 컨트롤의 지도 또는 스카이뷰 버튼을 클릭하면 호출되어 지도타입을 바꾸는 함수입니다
+		function setMapType(maptype) {
+			var roadmapControl = document.getElementById('btnRoadmap');
+			var skyviewControl = document.getElementById('btnSkyview');
+			if (maptype === 'roadmap') {
+				map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+				roadmapControl.className = 'selected_btn';
+				skyviewControl.className = 'btn';
+			} else {
+				map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
+				skyviewControl.className = 'selected_btn';
+				roadmapControl.className = 'btn';
+			}
+		}
+
+		// 로드뷰
+		var roadviewContainer = document.getElementById('roadview'); //로드뷰를 표시할 div
+		var roadview = new kakao.maps.Roadview(roadviewContainer); //로드뷰 객체
+		/* roadview.setQuality(kakao.maps.RoadviewQuality.HIGH); // 로드뷰 화질 */
+		var roadviewClient = new kakao.maps.RoadviewClient(); //좌표로부터 로드뷰 파노ID를 가져올 로드뷰 helper객체
+
+		var position = new kakao.maps.LatLng(33.450701, 126.570667);
+
+		// 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
+		roadviewClient.getNearestPanoId(position, 50, function(panoId) {
+			roadview.setPanoId(panoId, position); //panoId와 중심좌표를 통해 로드뷰 실행
+		});
+
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function(position) {
+				var locPosition = new kakao.maps.LatLng(
+						position.coords.latitude, position.coords.longitude);
+				map.setCenter(locPosition);
+
+				ps.keywordSearch('헬스장', placesSearchCB, { // 카테고리 기본 검색 헬스장
+					location : locPosition,
+					radius : 2500
+				//검색범위 2500 = 2.5km
+				});
+
+				displayUserMarker(locPosition);
+			});
+		}
+
+		function displayUserMarker(locPosition) {
+			var imageSrc = 'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
+			var imageSize = new kakao.maps.Size(24, 35); // 이용자 접속 위치 마커
+
+			var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+			var marker = new kakao.maps.Marker({
+				map : map,
+				position : locPosition,
+				image : markerImage
+			});
+
+			var iwContent = '<div style="padding:5px;">당신의 현재위치!</div>';
+			var iwRemoveable = true;
+
+			var infowindow = new kakao.maps.InfoWindow({
+				content : iwContent,
+				removable : iwRemoveable
+			});
+
+			kakao.maps.event.addListener(marker, 'click', function() {
+				infowindow.open(map, marker);
+			});
+		}
+
+		var infowindow = null; // 현재 열린 말풍선을 저장하기 위한 변수
+
+		function displayMarker(place) {
+			var imageSrc = '/images/pin.png'; // 주변 헬스장 마커
+			var imageSize = new kakao.maps.Size(40, 40); // 마커 크기
+
+			var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+			var marker = new kakao.maps.Marker({
+				map : map,
+				position : new kakao.maps.LatLng(place.y, place.x),
+				image : markerImage
+			});
+
+			var iwContent = '<div style="padding: 5px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9; width: 200px; font-size: 0.8rem; color:black;">'
+					+ '<h3 style="margin: 0;">'
+					+ place.place_name
+					+ '</h3>'
+					+ '<p style="margin: 0;">주소: '
+					+ place.address_name
+					+ '</p>'
+					+ '<p style="margin: 0;">전화번호: '
+					+ place.phone
+					+ '</p>'
+					+ '<button class="roadviewBtn" style="margin-top:5px;">로드뷰</button>' // 로드뷰 버튼 추가
+					+ '</div>';
+
+			kakao.maps.event.addListener(marker, 'click', function() {
+				if (infowindow) {
+					infowindow.close(); // 이전에 열린 말풍선을 닫습니다.
+				}
+
+				infowindow = new kakao.maps.InfoWindow({
+					content : iwContent,
+					removable : true
+				// true면 창닫기버튼 활성화
+				});
+
+				infowindow.open(map, marker);
+
+				// 로드뷰 버튼 클릭 이벤트 핸들러
+				var roadviewBtn = document.querySelector('.roadviewBtn');
+				roadviewBtn.addEventListener('click',
+						function() {
+							var placePosition = new kakao.maps.LatLng(place.y,
+									place.x);
+
+							roadviewClient.getNearestPanoId(placePosition, 50,
+									function(panoId) {
+										// 로드뷰의 panoId를 설정합니다.
+										roadview.setPanoId(panoId,
+												placePosition);
+									});
+
+							// 지도 및 로드뷰 표시 상태 변경
+							toggleMap(false);
+							// 해당 장소 위치를 글로벌 변수로 설정합니다.
+							currentPlacePosition = placePosition;
+						});
+			});
+		}
+
+		function placesSearchCB(data, status, pagination) {
+			if (status === kakao.maps.services.Status.OK) {
+				for (var i = 0; i < data.length; i++) {
+					displayMarker(data[i]);
+				}
+			}
+		}
+
+		// 지도와 로드뷰를 감싸고 있는 div의 class를 변경하여 지도를 숨기거나 보이게 하는 함수입니다 
+		function toggleMap(showMap) {
+			if (showMap) {
+				document.getElementById('map').style.opacity = 1;
+				document.getElementById('roadview').style.opacity = 0;
+				document.getElementById('map').style.zIndex = 2;
+				document.getElementById('roadview').style.zIndex = 1;
+				document.getElementById('mapReturnBtn').style.display = 'none';
+			} else {
+				document.getElementById('map').style.opacity = 0;
+				document.getElementById('roadview').style.opacity = 1;
+				document.getElementById('map').style.zIndex = 1;
+				document.getElementById('roadview').style.zIndex = 2;
+				document.getElementById('mapReturnBtn').style.display = 'block';
+			}
+		}
+	</script>
+
+	<!-- footer -->
+	<div class="footer" style="margin-top: auto;">
+		<div class="container" align="left">
+			<div class="row">
+				<div class="col-md-4 footer-section">
+					<a href="#" class="footer-logo">GYM_PT</a>
+					<p class="dimmed-text">Growth Your Momentum-PT</p>
+					<div class="social-icons">
+						<a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+						<a href="#" class="twitter"><i class="fab fa-twitter"></i></a> <a
+							href="#" class="instagram"><i class="fab fa-instagram"></i></a> <a
+							href="#" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
+					</div>
+				</div>
+
+				<div class="col-md-4 footer-section">
+					<h4>About Us</h4>
+					<div class="dimmed-text">
+						<div class="contact-info">대표이사: 김연수 | 사업자등록 번호: 809-81-01574</div>
+						<div class="contact-info">영업 시간: 평일 9:00-18:00</div>
+						<div class="contact-info">회사 신념: "Growth Your Momentum-PT"</div>
+						<div class="contact-info">수상: "2023년 최고의 피트니스 웹사이트"로 선정</div>
+					</div>
+				</div>
+				<div class="col-md-4 footer-section">
+					<h4>Contact Us</h4>
+					<div class="dimmed-text">
+						<div>주소: 서울시 송파구 가락동</div>
+						<div>전화: 1588-3819 (평일 9:00-18:00)</div>
+						<div>결제도용신고: 1588-3816</div>
+						<div>이메일: help@gympt.com</div>
+						<div>고객센터 이용안내: 고객님의 소중한 의견을 기다립니다.</div>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<div class="row">
+				<div class="col-md-12">
+					<p class="text-center">&copy; 2023 GYM_PT. All Rights Reserved.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- footer -->
+</body>
+</html>

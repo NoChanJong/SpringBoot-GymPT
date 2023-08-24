@@ -1,0 +1,441 @@
+@charset "UTF-8";
+
+body {
+   color: #fff;
+   font-size: 13px; /* Adjust the base font size */
+   margin-top: 5%; /* Move the content down */
+   display: flex;
+   flex-direction: column;
+   min-height: 100vh;
+}
+
+.container {
+   flex: 1;
+}
+
+.navbar {
+   animation: animatedBackground 10s ease infinite;
+   background-image: linear-gradient(45deg, #55DFFE, #000, #C141FF, #190061);
+   background-size: 400% 400%;
+   padding: 5px 10px; /* Reduce the padding */
+   margin-bottom: 0; /* Remove the margin */
+   height: 60px; /* Set the desired height */
+   line-height: 50px;
+   /* Set the line height to center the text vertically */
+   z-index: 999;
+}
+
+.navbar::before {
+   content: "";
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-image: linear-gradient(45deg, #55DFFE, #000, #C141FF, #190061);
+   background-size: 400% 400%;
+   animation: animatedBackground 10s ease infinite;
+   opacity: 0.3;
+}
+
+.navbar-brand {
+   color: #fff !important;
+   font-weight: bold;
+}
+
+    @keyframes animatedBackground {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+.bg-primary {
+   padding: 20px;
+   border-radius: 10px;
+   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.text-white {
+   margin-bottom: 20px;
+}
+
+/* SIDEBAR TOGGLE */
+.sidebar-toggle {
+   position: fixed;
+   top: 14px; /* Move the toggle down */
+   right: 20px;
+   width: 40px;
+   height: 40px;
+   background-color: transparent;
+   border: none;
+   z-index: 999;
+   cursor: pointer;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.sidebar-toggle.active {
+    top: 1px; /* 원하는 위치로 수정하세요. */
+    right: 20px; /* 기존 값은 그대로 둡니다. */
+    /* 원하는 위치로 top 속성 값을 조정하세요. */
+}
+
+
+.sidebar-toggle .bar {
+   position: relative;
+   width: 20px;
+   height: 2px;
+   background-color: #ffffff;
+   margin-bottom: 4px;
+   transition: transform 0.3s, opacity 0.3s;
+}
+
+.sidebar-toggle .bar:before, .sidebar-toggle .bar:after {
+   content: "";
+   position: absolute;
+   width: 100%;
+   height: 100%;
+   background-color: #ffffff;
+   transition: transform 0.3s, opacity 0.3s;
+}
+
+.sidebar-toggle .bar:before {
+   top: -8px;
+}
+
+.sidebar-toggle .bar:after {
+   top: 8px;
+}
+
+
+.sidebar-toggle.active .bar:nth-child(1) {
+   transform: rotate(45deg) translate(19px);
+}
+
+.sidebar-toggle.active .bar:nth-child(2) {
+   opacity: 0;
+}
+
+.sidebar-toggle.active .bar:nth-child(3) {
+   transform: rotate(-45deg) translate(-19px);
+}
+
+/* Add the CSS for the "X" shape */
+.sidebar-toggle.active .bar:nth-child(1):before {
+   content: "";
+   position: absolute;
+   width: 100%;
+   height: 100%;
+   background-color: #ffffff;
+   transform: rotate(-90deg);
+}
+
+.sidebar-toggle.active .bar:nth-child(3):before {
+   content: "";
+   position: absolute;
+   width: 100%;
+   height: 100%;
+   background-color: #ffffff;
+   transform: rotate(90deg);
+}
+
+.sidebar-toggle.active .bar:nth-child(1):after {
+   content: "";
+   position: absolute;
+   width: 100%;
+   height: 100%;
+   background-color: #ffffff;
+   transform: rotate(-90deg);
+}
+
+.sidebar-toggle.active .bar:nth-child(3):after {
+   content: "";
+   position: absolute;
+   width: 100%;
+   height: 100%;
+   background-color: #ffffff;
+   transform: rotate(90deg);
+}
+
+.sidebar {
+   position: fixed;
+   top: 0;
+   right: -30%;
+   width: 30%;
+   height: 100vh;
+   background-color: #293241;
+   transition: right 0.3s ease-in-out;
+   z-index: 999;
+}
+
+@media ( max-width : 745px) {
+   .sidebar {
+      right: -100%;
+      width: 100%;
+   }
+}
+
+.sidebar.active {
+   right: 0;
+}
+
+.sidebar ul {
+   list-style: none;
+   padding: 0;
+   margin: 0;
+}
+
+.sidebar ul li {
+   padding: 8px 15px;
+}
+
+.sidebar ul li a {
+   display: block;
+   color: #fff;
+   text-decoration: none;
+   transition: color 0.3s;
+   font-size: 14px;
+}
+
+.sidebar ul li a:hover {
+   color: #78a9ce;
+   transform: scale(1.05);
+   /* Increase the scale on hover (you can adjust the value as needed) */
+   transition: transform 0.3s ease; /* Add a smooth transition effect */
+}
+
+/* Updated CSS */
+.sidebar ul {
+   padding-top: 50px;
+   /* Adjust the top padding to move the content down */
+}
+
+/* New CSS for login and signup */
+.sidebar ul li.login-signup {
+   display: flex;
+   align-items: center;
+   justify-content: flex-start;
+}
+
+.sidebar ul li.login-signup a {
+   margin-right: 10px;
+}
+
+.sidebar ul li.login-signup a:hover {
+   color: #77C4FE;
+   text-shadow: none;
+}
+
+#searchFormWrapper {
+   position: fixed;
+   top: 60px; /* 네비게이션 바 아래에 위치하도록 조정 */
+   left: 50%; /* 가로 중앙에 위치하도록 조정 */
+   transform: translateX(-50%); /* 왼쪽으로 50% 이동하여 가로 중앙 정렬 */
+   width: 400px; /* 원하는 폭으로 설정 */
+   padding: 8px;
+   z-index: 999;
+   display: none; /* 기본적으로 숨겨진 상태 */
+}
+
+/* 네비게이션 바에서 검색 토글 버튼을 클릭했을 때 검색 폼을 보이도록 설정 */
+#searchFormWrapper.active {
+   display: flex;
+   align-items: center;
+}
+
+/* 추가적인 스타일링이 필요하다면 이어서 작성합니다 */
+
+/* ======================================================================= */
+/* ======================================================================= */
+/* ======================================================================= */
+/* ======================================================================= */
+#myFormWrapper {
+   position: fixed;
+   top: 60px;
+   right: 2%;
+   background-color: #212529;
+   width: 200px;
+   padding: 8px;
+   z-index: 999;
+   display: none;
+   flex-direction: column; /* 버튼을 세로로 나열하기 위해 추가 */
+   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* 네비게이션 바에서 검색 토글 버튼을 클릭했을 때 검색 폼을 보이도록 설정 */
+#myFormWrapper.active {
+   display: flex;
+   align-items: center;
+}
+
+/* 버튼 간의 간격을 조절 */
+#myFormWrapper a {
+   width: 100%;
+}
+
+#myFormWrapper a:hover {
+   background-color: gray;
+}
+
+/* Hover effect for the profile icon button */
+.profile-icon-button:hover img {
+   transform: scale(1.2);
+   /* Increase the scale on hover (you can adjust the value as needed) */
+   transition: transform 0.3s ease; /* Add a smooth transition effect */
+}
+
+.chat-icon-button:hover {
+   transform: scale(1.2);
+   /* Increase the scale on hover (you can adjust the value as needed) */
+   transition: transform 0.3s ease; /* Add a smooth transition effect */
+}
+
+#searchToggle:hover {
+   transform: scale(1.2);
+   /* Increase the scale on hover (you can adjust the value as needed) */
+   transition: transform 0.3s ease; /* Add a smooth transition effect */
+}
+
+/* 추가적인 스타일링이 필요하다면 이어서 작성합니다 */
+.chat-icon-button {
+   position: absolute;
+   top: 11px;
+   right: 70px; /* Adjust this as needed */
+   color: #fff;
+   background-color: transparent;
+   border: none;
+}
+
+.chat-icon-button i {
+   transform: rotate(-30deg);
+}
+
+.profile-icon-button {
+   position: absolute;
+   top: 12px;
+   right: 120px; /* Adjust this as needed */
+   color: #fff;
+   background-color: transparent;
+   border: none;
+}
+
+#searchToggle {
+   position: absolute;
+   top: 12px;
+   right: 170px; /* Adjust this as needed */
+   color: #fff;
+   background-color: transparent;
+   border: none;
+}
+
+.profile-icon-button {
+   position: absolute;
+   top: 12px;
+   right: 120px; /* Adjust this as needed */
+   border: none;
+}
+
+#submenu {
+   padding: 0; /* '쇼핑몰'과 첫 번째 서브메뉴 항목 간의 간격을 줄입니다 */
+   margin: 8px; /* '쇼핑몰'과 첫 번째 서브메뉴 항목 간의 간격을 줄입니다 */
+}
+
+.submenu {
+   display: none;
+}
+
+.submenu.active {
+   display: block;
+}
+
+/* FOOTER */
+        .footer {
+            padding: 30px 0;
+            color: #f8f9fa;
+            background-color: #343a40;
+            margin-top: 5%;
+        }
+
+        .footer .footer-logo {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #f8f9fa;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer .footer-logo:hover {
+            color: #adb5bd;
+        }
+
+        .footer .footer-section {
+            margin-bottom: 20px;
+        }
+
+        .footer h4 {
+            font-size: 1em;
+            color: #ffc107; /* Yellow color for the titles */
+            font-weight: bold;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #343a40;
+            color: #f8f9fa;
+            border: 1px solid #f8f9fa;
+            border-radius: 50%;
+            padding: 5px;
+            margin-right: 5px;
+            transition: color 0.3s ease;
+            text-align: center;
+            height: 30px;
+            width: 30px;
+        }
+
+        /* Social media brand colors */
+        .social-icons a.facebook:hover {
+            color: #3b5998;
+        }
+
+        .social-icons a.twitter:hover {
+            color: #1da1f2;
+        }
+
+        .social-icons a.instagram:hover {
+            color: #C13584;
+        }
+
+        .social-icons a.linkedin:hover {
+            color: #0e76a8;
+        }
+
+        .footer .footer-section div a {
+            color: #f8f9fa;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer .footer-section div a:hover {
+            color: #adb5bd;
+        }
+
+        /* New styles for contact info */
+        .footer .contact-info i {
+            margin-right: 5px;
+        }
+
+        /* Dimmed text color */
+        .dimmed-text {
+            color: #bdc3c7; /* or any other color you prefer */
+        }

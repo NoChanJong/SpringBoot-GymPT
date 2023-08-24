@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>GYM-PT</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<script
+   src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<link rel="stylesheet"
+   href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+   integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+   crossorigin="anonymous">
+<link
+   href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+   rel="stylesheet"
+   integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+   crossorigin="anonymous">
+<script
+   src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+   integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+   crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css"
+   href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css" />
+<link rel="stylesheet"
+   href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" type="text/css" href="/css/navbar.css">
+<link rel="stylesheet" type="text/css" href="/css/footer.css">
+<link th:href="@{/css/atag.css}" rel="stylesheet">
+<link th:href="@{/css/btnprimary.css}" rel="stylesheet">
+<!-- Add your custom CSS links here -->
+
+</head>
+
+<body style="background-color: #212529; overflow-x: hidden;">
+<nav
+      class="navbar navbar-expand-lg navbar-light bg-light justify-content-start fixed-top">
+      <a th:href="@{/index}" class="btn logo-icon-button">
+         <img src="/logo/mainlogo2.png" alt="로고"
+         style="max-height: 15%; max-width: 15%;"> <span style="font-size: 24px;">GYM_PT</span>
+      </a>
+
+      <button id="searchToggle" class="btn btn-primary pt-2" type="button">
+         <i class="fas fa-search"></i>
+      </button>
+
+      <!-- 로그인한 사용자에게만 보여질 내용 -->
+      <div th:if="${#authentication.principal != 'anonymousUser'}">
+         <button id="myToggle" class="btn profile-icon-button" type="button">
+            <img th:src="@{/image/} + ${#authentication.principal.profile}"
+               alt="Profile Picture"
+               style="width: 30px; height: 30px; border-radius: 50%;">
+         </button>
+      </div>
+      <!-- 로그인하지 않은 사용자에게 보여질 내용 -->
+      <div th:unless="${#authentication.principal != 'anonymousUser'}">
+         <a href="#"></a>
+      </div>
+
+
+      <a th:href="@{/chat/room}" class="btn chat-icon-button" type="button">
+         <i class="material-icons">send</i>
+      </a>
+
+      <div id="searchFormWrapper"
+         class="d-none d-flex align-items-center mx-auto">
+      <form action="getBoardList" method="get" id="boardForm">
+         <input type="hidden" id="curPage" name="curPage" th:value="0">
+         <input type="hidden" id="rowSizePerPage" name="rowSizePerPage"
+            th:value="${rp}">
+         <div class="row mt-3 justify-content-center">
+            <div class="col-auto me-1">
+               <select class="form-select bg-dark" style="color: white;"
+                  id="searchType" name="searchType">
+                  <option value="">검색</option>
+                  <option value="title" th:selected="${st}=='title'">글제목</option>
+                  <option value="writer" th:selected="${st}=='writer'">사용자</option>
+                  <option value="content" th:selected="${st}=='content'">글내용</option>
+               </select>
+            </div>
+            <div class="col-6 me-1">
+               <input class="form-control me-2 bg-dark" style="color: white;"
+                  name="searchWord" type="text"
+                  placeholder="문의 검색" />
+            </div>
+            <div class="col-auto">
+               <div class="input-group">
+                  <input type="reset" id="btnReset"
+                     class="btn btn-success btn-sm px-4 me-2" value="초기화"> <input
+                     type="submit" class="btn btn-success btn-sm px-4 me-2" value="검색">
+               </div>
+            </div>
+
+         </div>
+      </form>
+      </div>
+
+      <div th:if="${#authentication.principal != 'anonymousUser'}"
+         id="myFormWrapper"
+         class="d-none d-flex mx-auto flex-column align-items-center">
+         <img th:src="@{/image/} + ${#authentication.principal.profile}"
+            alt="Profile Picture"
+            style="width: 80px; height: 80px; border-radius: 50%;">
+         <p th:text="${#authentication.principal.nickname}" class="m-0"></p>
+         <p th:text="${#authentication.principal.username}"
+            style="color: gray;" class="m-0"></p>
+		<a
+			th:href="@{/getMember(id=${#authentication.principal.username})}"
+			style="color: white;" class="m-0"><i class="fas fa-user"></i>
+			마이 페이지</a> <a href="logout" onclick="return confirm('로그아웃 하시겠습니까?')"
+			style="color: white;" class="m-0"><i class="fas fa-sign-out-alt"></i>
+			로그아웃</a>
+         <!-- 로그인 안되어있을떄  -->
+      </div>
+   </nav>
+
+   <div class="sidebar">
+      <ul>
+         <!-- 로그인하지 않은 상태일 때 로그인 및 회원가입 링크를 보여줍니다 -->
+         <li th:if="${#authentication.principal == 'anonymousUser'}"
+            class="login-signup"><a th:href="@{/login}">로그인</a> <a
+            th:href="@{/insertMember}">회원가입</a></li>
+
+         <!-- 로그인한 상태일 때 사용자 닉네임을 보여줍니다 -->
+         <li th:unless="${#authentication.principal == 'anonymousUser'}"><span
+               th:text="${#authentication.principal.nickname}"></span>님 접속중
+         </li>
+
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/index}"><i class="fas fa-home"></i> 홈</a></li>
+         <li><a th:href="@{/getCommunityList}"><i
+               class="fas fa-users"></i> 커뮤니티</a></li>
+         <li><a href="#" onclick="toggleSubMenu()"><i
+               class="fas fa-dumbbell"></i> 쇼핑몰</a>
+            <ul id="submenu" class="submenu">
+               <li><a th:href="@{/shopBoardList}"><i
+                     class="fas fa-shopping-cart"></i> 쇼핑하기</a></li>
+               <li><a th:href="@{/cartList}"><i
+                     class="fas fa-shopping-basket"></i> 장바구니</a></li>
+               <li><a th:href="@{/orderList}"><i class="fas fa-list-ul"></i>
+                     주문목록</a></li>
+               <li><a th:href="@{/insertPoint}"><i class="fas fa-coins"></i>
+                     포인트 충전</a></li>
+               <li><a th:href="@{/getBoardList}"><i
+                     class="fas fa-headset"></i> 고객센터</a></li>
+            </ul></li>
+         <li><a th:href="@{/getNewsList}"><i class="fas fa-newspaper"></i>
+               뉴스</a></li>
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/map}"><i class="fas fa-map-marker-alt"></i>
+               내 주변 헬스장 찾기</a></li>
+         <li><a th:href="@{/selectMember}"><i class="fas fa-user"></i>
+               유저 검색</a></li>
+         <li><a th:href="@{/getLikedCommunities}"><i
+               class="fas fa-heart"></i> 좋아요 한 게시물</a></li>
+         <li><hr></li>
+         <!-- New list item for horizontal rule -->
+         <li><a th:href="@{/getInformlist}"><i
+               class="fas fa-volume-up"></i> 공지사항</a></li>
+         <li><a th:href="@{#}" style="color: #289AFF;"><i class="fas fa-headset"></i>
+               문의사항</a></li>
+
+         <li><hr></li>
+         <li
+            th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+            <a th:href="@{/adminpage}"> <i class="fas fa-user"></i> 관리자 페이지
+         </a>
+         </li>
+      
+         <!-- New list item for horizontal rule -->
+      </ul>
+   </div>
+
+
+   <script>
+      function toggleSubMenu() {
+         var submenu = document.getElementById('submenu');
+         submenu.classList.toggle('active');
+      }
+   </script>
+
+   <div class="sidebar-toggle">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+   </div>
+
+
+
+   <script>
+      $(document).ready(function() {
+         $('.sidebar-toggle').on('click', function() {
+            $('.sidebar').toggleClass('active');
+            $(this).toggleClass('active');
+         });
+
+         $('.product-container').slick({
+            slidesToShow : 3,
+            slidesToScroll : 1,
+            prevArrow : $('.carousel-control.left'),
+            nextArrow : $('.carousel-control.right'),
+            responsive : [ {
+               breakpoint : 768,
+               settings : {
+                  slidesToShow : 1
+               }
+            } ]
+         });
+      });
+
+      $(document).ready(function() {
+         $("#searchToggle").on('click', function() {
+            $("#searchFormWrapper").toggleClass('d-none'); // 검색창을 보이거나 숨김
+         });
+      });
+
+      $(document).ready(function() {
+         $("#myToggle").on('click', function() {
+            $("#myFormWrapper").toggleClass('d-none'); // 검색창을 보이거나 숨김
+         });
+      });
+   </script>
+   <!-- nav -->
+
+   <div class="container mt-5 pt-5">
+      <div class="row justify-content-center">
+         <div class="col-md-8">
+            <h1 class="text-left mb-4">GYM PT 문의사항</h1>
+            <form th:action="@{/updateBoard}" method="post" class="bg-dark p-4"
+               style="border: 3px solid white; border-radius: 5px; margin-bottom: 5%;">
+               <input name="seq" type="hidden" th:value="${board.seq}">
+               <div class="mb-3">
+                  <label for="title" class="form-label">제목</label> <input
+                     style="background-color: #212529; color: white;" type="text"
+                     class="form-control" name="title" th:value="${board.title}">
+               </div>
+               <hr />
+               <!-- 로그인한 사용자에게만 보여질 내용 -->
+               <div th:if="${#authentication.isAuthenticated()}">
+                  <div class="mb-3">
+                     <label for="writer" class="form-label">작성자</label> <input
+                        style="background-color: #212529; color: white;" type="text"
+                        readonly class="form-control" name="writer"
+                        th:value="${board.writer}" />
+                  </div>
+               </div>
+               <hr />
+
+               <div class="mb-3">
+                  <label for="category" class="form-label">카테고리</label> <input
+                     style="background-color: #212529; color: white;" type="text"
+                     class="form-control" name="category" th:value="${board.category}"
+                     disabled>
+               </div>
+               <hr />
+               <div class="mb-3">
+                  <label for="content" class="form-label">내용</label>
+                  <textarea style="background-color: #212529; color: white;"
+                     class="form-control" name="content" rows="8"
+                     th:text="${board.content}"></textarea>
+               </div>
+               <hr />
+               <!-- 관리자 로그인 시 관리자 답변 작성란과 버튼 표시 -->
+               <div th:if="${isAdmin}" class="mb-3">
+                  <label for="adminReply" class="form-label">관리자 답변</label>
+                  <textarea style="background-color: #212529; color: white;"
+                     class="form-control" name="adminReply" rows="3"
+                     th:text="${board.adminReply}"></textarea>
+                  <button type="submit" name="adminReplyButton"
+                     class="btn btn-success mt-3">답변 작성</button>
+               </div>
+               <hr />
+               <!-- 일반 사용자 로그인 시 관리자 답변만 표시 -->
+               <div th:unless="${isAdmin}">
+                  <div th:if="${board.adminReply != null}" class="mb-3">
+                     <label class="form-label">관리자 답변</label>
+                     <textarea style="background-color: #212529; color: white;"
+                        class="form-control" rows="3" th:text="${board.adminReply}"
+                        readonly></textarea>
+                  </div>
+               </div>
+
+               <div class="mb-3">
+                  <label class="form-label">첨부파일</label> <a
+                     th:href="@{'/download?fn=' + ${board.fileName}}"
+                     class="badge bg-info" th:text="${board.fileName}">첨부파일 다운로드</a>
+               </div>
+               <hr />
+               <div class="mb-3">
+                  <label class="form-label">작성일</label> <input
+                     style="background-color: #212529; color: white;" type="date"
+                     class="form-control" name="createdate"
+                     th:value="${#dates.format(board.createDate, 'yyyy-MM-dd')}" readonly="readonly">
+               </div>
+               <hr />
+               <div class="mb-3">
+                  <label class="form-label">조회수</label> <input
+                     style="background-color: #212529; color: white;" type="text"
+                     class="form-control" name="cnt" th:value="${board.cnt}" disabled>
+               </div>
+               <hr />
+               <div class="container text-center mt-4">
+                  <!-- 본인이나 관리자가 쓴 게시물에만 "수정하기" 버튼을 활성화합니다. -->
+                  <input type="submit" class="btn btn-success"
+                     th:if="${board.writer eq #authentication.getName() or isAdmin}"
+                     value="수정하기" />
+                  <!-- 다른 이용자가 쓴 게시물에는 "수정하기" 버튼을 비활성화합니다. -->
+                  <input type="submit" class="btn btn-success"
+                     th:unless="${board.writer eq #authentication.getName() or isAdmin}"
+                     value="수정하기" disabled />
+                  <!-- 본인이나 관리자일 때만 삭제 버튼을 표시합니다. -->
+                  <a
+                     th:classappend="${(board.writer eq #authentication.getName() or isAdmin) ? '' : 'disabled'}"
+                     th:href="@{/deleteBoard(seq=${board.seq})}"
+                     class="btn btn-danger ms-2"
+                     onclick="return confirm('게시글을 삭제하시겠습니까?')">게시글 삭제</a> <a
+                     th:href="@{/getBoardList}" class="btn btn-success ms-2">뒤로가기</a>
+               </div>
+
+
+            </form>
+         </div>
+      </div>
+   </div>
+
+
+    <!-- footer -->
+    <div class="footer" style="margin-top: auto;">
+        <div class="container" align="left">
+            <div class="row">
+                <div class="col-md-4 footer-section">
+                    <a href="#" class="footer-logo">GYM_PT</a>
+                    <p class="dimmed-text">Growth Your Momentum-PT</p>
+                    <div class="social-icons">
+                        <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 footer-section">
+                    <h4>About Us</h4>
+                    <div class="dimmed-text">
+                        <div class="contact-info">대표이사: 김연수 | 사업자등록 번호: 809-81-01574</div>
+                        <div class="contact-info">영업 시간: 평일 9:00-18:00</div>
+                        <div class="contact-info">회사 신념: "Growth Your Momentum-PT"</div>
+                        <div class="contact-info">수상: "2023년 최고의 피트니스 웹사이트"로 선정</div>
+                    </div>
+                </div>
+                <div class="col-md-4 footer-section">
+                    <h4>Contact Us</h4>
+                    <div class="dimmed-text">
+                        <div>주소: 서울시 송파구 가락동</div>
+                        <div>전화: 1588-3819 (평일 9:00-18:00)</div>
+                        <div>결제도용신고: 1588-3816</div>
+                        <div>이메일: help@gympt.com</div>
+                        <div>고객센터 이용안내: 고객님의 소중한 의견을 기다립니다.</div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="text-center">&copy; 2023 GYM_PT. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+   <!-- footer -->
+
+</body>
+
+</html>
